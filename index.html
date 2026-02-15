@@ -972,11 +972,7 @@
         }
 
         function getWeekTarget(week) {
-            if (week >= 1 && week <= 13) return 3;
-            if (week >= 14 && week <= 26) return 4;
-            if (week >= 27 && week <= 39) return 5;
-            if (week >= 40 && week <= 52) return 6;
-            return 3;
+            return 4.5;
         }
 
         function updatePeriodDisplay() {
@@ -1464,7 +1460,7 @@
                 }
                 
                 const allData = snapshot.val();
-                const sortedKeys = Object.keys(allData).sort().reverse().slice(0, 10);
+                const sortedKeys = Object.keys(allData).sort().reverse().slice(0, 3);
                 
                 for (const key of sortedKeys) {
                     const [_, year, week] = key.split('-');
@@ -1472,10 +1468,11 @@
                     const total = data.gym + data.class + data.tennis;
                     
                     if (total > 0) {
+                        const dateRange = formatWeekDates(parseInt(year), parseInt(week));
                         const item = document.createElement('div');
                         item.className = 'timeline-item';
                         item.innerHTML = `
-                            <div class="timeline-date">Week ${week}, ${year}</div>
+                            <div class="timeline-date">Week ${week}: ${dateRange}</div>
                             <div class="timeline-stats">
                                 <div class="timeline-stat">💪 <strong>${data.gym}</strong></div>
                                 <div class="timeline-stat">🏃 <strong>${data.class}</strong></div>
