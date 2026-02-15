@@ -214,84 +214,179 @@
             transform: scale(0.98);
         }
 
-        /* Date Picker Dropdown */
-        .date-picker-dropdown {
+        /* Custom Calendar Modal */
+        .calendar-modal {
             display: none;
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .calendar-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .calendar-container {
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            z-index: 100;
-            min-width: 300px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            animation: dropdownSlideIn 0.2s ease-out;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease-out;
         }
 
-        .date-picker-dropdown.active {
-            display: block;
-        }
-
-        @keyframes dropdownSlideIn {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(-8px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0);
             }
         }
 
-        /* Custom Date Input Styling */
-        .date-input-wrapper {
-            position: relative;
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
         }
 
-        .date-input-wrapper input[type="date"] {
-            width: 100%;
-            padding: 12px 16px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+        .calendar-month-year {
+            font-size: 1.125rem;
+            font-weight: 600;
             color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--accent-primary);
+            transform: scale(1.05);
+        }
+
+        .calendar-nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            padding: 8px 0;
+            text-transform: uppercase;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 0.9375rem;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day:hover:not(.calendar-day-empty):not(.calendar-day-other-month) {
+            background: var(--bg-secondary);
+        }
+
+        .calendar-day.calendar-day-selected {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.calendar-day-today {
+            border: 2px solid var(--accent-primary);
+        }
+
+        .calendar-day.calendar-day-empty {
+            cursor: default;
+        }
+
+        .calendar-day.calendar-day-other-month {
+            color: var(--text-tertiary);
+            opacity: 0.4;
+        }
+
+        .calendar-confirm-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .date-input-wrapper input[type="date"]:hover {
-            border-color: var(--accent-primary);
-            background: var(--bg-primary);
+        .calendar-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .date-input-wrapper input[type="date"]:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        .calendar-confirm-btn:active {
+            transform: translateY(0);
         }
 
-        /* Style the date picker calendar icon */
-        .date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            filter: invert(1);
-            opacity: 0.6;
-            transition: opacity 0.2s ease;
-        }
-
-        .date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator:hover {
-            opacity: 1;
-        }
-
-        /* Firefox date input styling */
-        .date-input-wrapper input[type="date"]::-moz-calendar-picker-indicator {
-            cursor: pointer;
-            filter: invert(1);
+        .calendar-confirm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .activity-input {
@@ -640,14 +735,7 @@
             <div class="card">
                 <div class="week-selector">
                     <button id="prev-week">←</button>
-                    <div class="week-display" id="week-display">
-                        Week 1, 2026
-                        <div class="date-picker-dropdown" id="date-picker-dropdown">
-                            <div class="date-input-wrapper">
-                                <input type="date" id="week-date-input">
-                            </div>
-                        </div>
-                    </div>
+                    <div class="week-display" id="week-display">Week 1, 2026</div>
                     <button id="next-week">→</button>
                 </div>
 
@@ -778,6 +866,31 @@
         </div>
     </div>
 
+    <!-- Custom Calendar Modal -->
+    <div class="calendar-modal" id="calendar-modal">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="calendar-nav-btn" id="calendar-prev-month">←</button>
+                <div class="calendar-month-year" id="calendar-month-year">JAN 2026</div>
+                <button class="calendar-nav-btn" id="calendar-next-month">→</button>
+            </div>
+            
+            <div class="calendar-weekdays">
+                <div class="calendar-weekday">S</div>
+                <div class="calendar-weekday">M</div>
+                <div class="calendar-weekday">T</div>
+                <div class="calendar-weekday">W</div>
+                <div class="calendar-weekday">T</div>
+                <div class="calendar-weekday">F</div>
+                <div class="calendar-weekday">S</div>
+            </div>
+            
+            <div class="calendar-days" id="calendar-days"></div>
+            
+            <button class="calendar-confirm-btn" id="calendar-confirm">Confirm</button>
+        </div>
+    </div>
+
     <script type="module">
         // Import Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -888,17 +1001,17 @@
             
             if (currentPeriod === 'week') {
                 const dateRange = formatWeekDates(statsYear, statsWeek);
-                display.innerHTML = `Week ${statsWeek}: ${dateRange}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-input-wrapper"><input type="date" id="period-date-input"></div></div>`;
+                display.textContent = `Week ${statsWeek}: ${dateRange}`;
             } else if (currentPeriod === 'month') {
                 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December'];
-                display.innerHTML = `${monthNames[statsMonth]} ${statsYear}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-input-wrapper"><input type="date" id="period-date-input"></div></div>`;
+                display.textContent = `${monthNames[statsMonth]} ${statsYear}`;
             } else if (currentPeriod === 'year') {
-                display.innerHTML = `${statsYear}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-input-wrapper"><input type="date" id="period-date-input"></div></div>`;
+                display.textContent = `${statsYear}`;
             }
             
-            // Re-attach event listeners for stats date picker
-            setupStatsDatePicker();
+            // Re-attach event listener for stats calendar
+            setupStatsCalendar();
         }
 
         async function loadWeekData() {
@@ -969,19 +1082,7 @@
 
         function updateWeekDisplay() {
             const dateRange = formatWeekDates(currentYear, currentWeek);
-            const weekDisplayEl = document.getElementById('week-display');
-            const dropdown = weekDisplayEl.querySelector('.date-picker-dropdown');
-            
-            // Update text content while preserving the dropdown
-            const textNode = Array.from(weekDisplayEl.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
-            if (textNode) {
-                textNode.textContent = `Week ${currentWeek}: ${dateRange}`;
-            } else {
-                weekDisplayEl.insertBefore(
-                    document.createTextNode(`Week ${currentWeek}: ${dateRange}`),
-                    dropdown
-                );
-            }
+            document.getElementById('week-display').textContent = `Week ${currentWeek}: ${dateRange}`;
         }
 
         async function initializeHistoricalData() {
@@ -1065,57 +1166,171 @@
 
         document.getElementById('save-btn').addEventListener('click', saveWeekData);
 
-        // Tracker tab date picker functionality
-        const datePickerDropdown = document.getElementById('date-picker-dropdown');
-        const weekDisplayEl = document.getElementById('week-display');
-        const weekDateInput = document.getElementById('week-date-input');
+        // Custom Calendar functionality
+        const calendarModal = document.getElementById('calendar-modal');
+        const calendarDays = document.getElementById('calendar-days');
+        const calendarMonthYear = document.getElementById('calendar-month-year');
+        const calendarPrevMonth = document.getElementById('calendar-prev-month');
+        const calendarNextMonth = document.getElementById('calendar-next-month');
+        const calendarConfirm = document.getElementById('calendar-confirm');
+        
+        let calendarCurrentMonth = new Date().getMonth();
+        let calendarCurrentYear = new Date().getFullYear();
+        let calendarSelectedDate = null;
+        let calendarMode = 'tracker'; // 'tracker' or 'stats'
 
-        // Set default date to current week
-        function setDatePickerToCurrentWeek() {
-            const dates = getWeekDates(currentYear, currentWeek);
-            const dateStr = dates.start.toISOString().split('T')[0];
-            weekDateInput.value = dateStr;
+        const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+        function renderCalendar() {
+            const firstDay = new Date(calendarCurrentYear, calendarCurrentMonth, 1);
+            const lastDay = new Date(calendarCurrentYear, calendarCurrentMonth + 1, 0);
+            const prevLastDay = new Date(calendarCurrentYear, calendarCurrentMonth, 0);
+            
+            const firstDayIndex = firstDay.getDay();
+            const lastDayDate = lastDay.getDate();
+            const prevLastDayDate = prevLastDay.getDate();
+            
+            calendarMonthYear.textContent = `${monthNames[calendarCurrentMonth]} ${calendarCurrentYear}`;
+            
+            let days = '';
+            
+            // Previous month days
+            for (let x = firstDayIndex; x > 0; x--) {
+                const day = prevLastDayDate - x + 1;
+                days += `<button class="calendar-day calendar-day-other-month" data-date="${calendarCurrentYear}-${calendarCurrentMonth}-${day}">${day}</button>`;
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let i = 1; i <= lastDayDate; i++) {
+                const date = new Date(calendarCurrentYear, calendarCurrentMonth, i);
+                const dateStr = `${calendarCurrentYear}-${calendarCurrentMonth + 1}-${i}`;
+                const isToday = date.toDateString() === today.toDateString();
+                const isSelected = calendarSelectedDate && 
+                    date.toDateString() === calendarSelectedDate.toDateString();
+                
+                let classes = 'calendar-day';
+                if (isToday) classes += ' calendar-day-today';
+                if (isSelected) classes += ' calendar-day-selected';
+                
+                days += `<button class="${classes}" data-date="${dateStr}">${i}</button>`;
+            }
+            
+            // Next month days
+            const remainingDays = 42 - (firstDayIndex + lastDayDate);
+            for (let j = 1; j <= remainingDays; j++) {
+                const nextMonth = calendarCurrentMonth + 1;
+                const nextYear = nextMonth > 11 ? calendarCurrentYear + 1 : calendarCurrentYear;
+                const month = nextMonth > 11 ? 0 : nextMonth;
+                days += `<button class="calendar-day calendar-day-other-month" data-date="${nextYear}-${month + 1}-${j}">${j}</button>`;
+            }
+            
+            calendarDays.innerHTML = days;
+            
+            // Add click listeners to day buttons
+            calendarDays.querySelectorAll('.calendar-day').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const [year, month, day] = btn.dataset.date.split('-').map(Number);
+                    calendarSelectedDate = new Date(year, month - 1, day);
+                    renderCalendar();
+                });
+            });
         }
 
-        // Show date picker when clicking week display
-        weekDisplayEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setDatePickerToCurrentWeek();
-            datePickerDropdown.classList.add('active');
-            // Close stats date picker if open
-            const statsDatePicker = document.getElementById('period-date-picker-dropdown');
-            if (statsDatePicker) {
-                statsDatePicker.classList.remove('active');
-            }
-            // Focus and open the native date picker
-            setTimeout(() => {
-                weekDateInput.focus();
-                weekDateInput.showPicker && weekDateInput.showPicker();
-            }, 100);
+        function openCalendar(mode, initialDate) {
+            calendarMode = mode;
+            calendarSelectedDate = initialDate || new Date();
+            calendarCurrentMonth = calendarSelectedDate.getMonth();
+            calendarCurrentYear = calendarSelectedDate.getFullYear();
+            renderCalendar();
+            calendarModal.classList.add('active');
+        }
+
+        function closeCalendar() {
+            calendarModal.classList.remove('active');
+        }
+
+        // Tracker tab - open calendar
+        document.getElementById('week-display').addEventListener('click', () => {
+            const dates = getWeekDates(currentYear, currentWeek);
+            openCalendar('tracker', dates.start);
         });
 
-        // Navigate to selected week immediately when date changes
-        weekDateInput.addEventListener('change', async (e) => {
-            const selectedDate = new Date(weekDateInput.value + 'T12:00:00');
-            if (!isNaN(selectedDate.getTime())) {
+        // Stats tab - open calendar
+        function setupStatsCalendar() {
+            const periodDisplay = document.getElementById('period-display');
+            if (!periodDisplay) return;
+            
+            const clickHandler = (e) => {
+                e.stopPropagation();
+                let initialDate;
+                if (currentPeriod === 'week') {
+                    const dates = getWeekDates(statsYear, statsWeek);
+                    initialDate = dates.start;
+                } else if (currentPeriod === 'month') {
+                    initialDate = new Date(statsYear, statsMonth, 1);
+                } else {
+                    initialDate = new Date(statsYear, 0, 1);
+                }
+                openCalendar('stats', initialDate);
+            };
+            
+            periodDisplay.removeEventListener('click', clickHandler);
+            periodDisplay.addEventListener('click', clickHandler);
+        }
+
+        // Calendar navigation
+        calendarPrevMonth.addEventListener('click', (e) => {
+            e.stopPropagation();
+            calendarCurrentMonth--;
+            if (calendarCurrentMonth < 0) {
+                calendarCurrentMonth = 11;
+                calendarCurrentYear--;
+            }
+            renderCalendar();
+        });
+
+        calendarNextMonth.addEventListener('click', (e) => {
+            e.stopPropagation();
+            calendarCurrentMonth++;
+            if (calendarCurrentMonth > 11) {
+                calendarCurrentMonth = 0;
+                calendarCurrentYear++;
+            }
+            renderCalendar();
+        });
+
+        // Close calendar when clicking outside
+        calendarModal.addEventListener('click', (e) => {
+            if (e.target === calendarModal) {
+                closeCalendar();
+            }
+        });
+
+        // Confirm button
+        calendarConfirm.addEventListener('click', async () => {
+            if (!calendarSelectedDate) return;
+            
+            if (calendarMode === 'tracker') {
                 await saveWeekDataSilently();
-                currentYear = selectedDate.getFullYear();
-                currentWeek = getWeekNumber(selectedDate);
+                currentYear = calendarSelectedDate.getFullYear();
+                currentWeek = getWeekNumber(calendarSelectedDate);
                 await loadWeekData();
-                datePickerDropdown.classList.remove('active');
+            } else if (calendarMode === 'stats') {
+                if (currentPeriod === 'week') {
+                    statsWeek = getWeekNumber(calendarSelectedDate);
+                    statsYear = calendarSelectedDate.getFullYear();
+                } else if (currentPeriod === 'month') {
+                    statsMonth = calendarSelectedDate.getMonth();
+                    statsYear = calendarSelectedDate.getFullYear();
+                } else if (currentPeriod === 'year') {
+                    statsYear = calendarSelectedDate.getFullYear();
+                }
+                updateStats();
             }
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!weekDisplayEl.contains(e.target)) {
-                datePickerDropdown.classList.remove('active');
-            }
-        });
-
-        // Prevent dropdown from closing when clicking inside it
-        datePickerDropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
+            
+            closeCalendar();
         });
 
         document.querySelectorAll('.period-btn').forEach(btn => {
@@ -1136,84 +1351,6 @@
                 
                 updateStats();
             });
-        });
-
-        // Stats tab date picker functionality
-        function setupStatsDatePicker() {
-            const periodDatePickerDropdown = document.getElementById('period-date-picker-dropdown');
-            const periodDisplayEl = document.getElementById('period-display');
-            const periodDateInput = document.getElementById('period-date-input');
-
-            if (!periodDatePickerDropdown || !periodDisplayEl) return;
-
-            // Set default date based on current period
-            function setDatePickerToCurrentPeriod() {
-                let dateStr;
-                if (currentPeriod === 'week') {
-                    const dates = getWeekDates(statsYear, statsWeek);
-                    dateStr = dates.start.toISOString().split('T')[0];
-                } else if (currentPeriod === 'month') {
-                    dateStr = `${statsYear}-${String(statsMonth + 1).padStart(2, '0')}-01`;
-                } else {
-                    dateStr = `${statsYear}-01-01`;
-                }
-                periodDateInput.value = dateStr;
-            }
-
-            // Show date picker when clicking period display
-            const clickHandler = (e) => {
-                e.stopPropagation();
-                setDatePickerToCurrentPeriod();
-                periodDatePickerDropdown.classList.add('active');
-                // Close tracker date picker if open
-                const trackerDatePicker = document.getElementById('date-picker-dropdown');
-                if (trackerDatePicker) {
-                    trackerDatePicker.classList.remove('active');
-                }
-                // Focus and open the native date picker
-                setTimeout(() => {
-                    periodDateInput.focus();
-                    periodDateInput.showPicker && periodDateInput.showPicker();
-                }, 100);
-            };
-            periodDisplayEl.removeEventListener('click', clickHandler);
-            periodDisplayEl.addEventListener('click', clickHandler);
-
-            // Navigate immediately when date changes
-            if (periodDateInput) {
-                const changeHandler = (e) => {
-                    const selectedDate = new Date(periodDateInput.value + 'T12:00:00');
-                    if (!isNaN(selectedDate.getTime())) {
-                        if (currentPeriod === 'week') {
-                            statsWeek = getWeekNumber(selectedDate);
-                            statsYear = selectedDate.getFullYear();
-                        } else if (currentPeriod === 'month') {
-                            statsMonth = selectedDate.getMonth();
-                            statsYear = selectedDate.getFullYear();
-                        } else if (currentPeriod === 'year') {
-                            statsYear = selectedDate.getFullYear();
-                        }
-                        updateStats();
-                        periodDatePickerDropdown.classList.remove('active');
-                    }
-                };
-                periodDateInput.removeEventListener('change', changeHandler);
-                periodDateInput.addEventListener('change', changeHandler);
-            }
-
-            // Prevent dropdown from closing when clicking inside it
-            periodDatePickerDropdown.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-        }
-
-        // Close all dropdowns when clicking outside
-        document.addEventListener('click', (e) => {
-            const periodDatePicker = document.getElementById('period-date-picker-dropdown');
-            const periodDisplay = document.getElementById('period-display');
-            if (periodDatePicker && periodDisplay && !periodDisplay.contains(e.target)) {
-                periodDatePicker.classList.remove('active');
-            }
         });
 
         document.getElementById('prev-period').addEventListener('click', () => {
