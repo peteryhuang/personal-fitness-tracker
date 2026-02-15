@@ -19,18 +19,19 @@
         }
 
         :root {
-            --bg-primary: #000000;
-            --bg-secondary: rgba(255, 255, 255, 0.03);
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --accent-primary: #ffffff;
-            --accent-secondary: #e5e5e5;
-            --accent-success: #a0a0a0;
-            --text-primary: #ffffff;
-            --text-secondary: #a3a3a3;
-            --text-tertiary: #737373;
-            --border: rgba(255, 255, 255, 0.08);
+            --bg-primary: #0a0f14;
+            --bg-secondary: rgba(20, 30, 40, 0.4);
+            --bg-card: rgba(25, 35, 45, 0.6);
+            --accent-primary: #4fd1c5;
+            --accent-secondary: #38b2ac;
+            --accent-success: #68d391;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --border: rgba(255, 255, 255, 0.06);
             --shadow: rgba(0, 0, 0, 0.5);
-            --gradient-subtle: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+            --gradient-subtle: linear-gradient(135deg, rgba(79, 209, 197, 0.05), rgba(56, 178, 172, 0.02));
+            --gradient-card: linear-gradient(145deg, rgba(30, 45, 55, 0.7), rgba(20, 35, 45, 0.5));
         }
 
         body {
@@ -88,11 +89,12 @@
             display: flex;
             gap: 8px;
             margin-bottom: 24px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(20, 30, 40, 0.5);
             backdrop-filter: blur(10px);
-            padding: 4px;
-            border-radius: 12px;
+            padding: 6px;
+            border-radius: 14px;
             animation: fadeIn 0.8s ease-out 0.2s both;
+            border: 1px solid var(--border);
         }
 
         @keyframes fadeIn {
@@ -115,8 +117,8 @@
         }
 
         .tab.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
+            background: rgba(79, 209, 197, 0.12);
+            color: var(--accent-primary);
         }
 
         .view {
@@ -134,12 +136,13 @@
         }
 
         .card {
-            background: var(--gradient-subtle);
+            background: var(--gradient-card);
             backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 24px;
             margin-bottom: 16px;
             border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s ease;
         }
 
@@ -152,10 +155,10 @@
 
         .week-selector button {
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(30, 45, 55, 0.6);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             color: var(--text-primary);
             cursor: pointer;
             font-family: 'Inter', sans-serif;
@@ -165,7 +168,8 @@
         }
 
         .week-selector button:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(40, 55, 65, 0.7);
+            border-color: rgba(79, 209, 197, 0.3);
         }
 
         .week-selector button:active {
@@ -187,7 +191,7 @@
         }
 
         .week-display:hover {
-            background: var(--bg-secondary);
+            background: rgba(79, 209, 197, 0.08);
         }
 
         .week-display:active {
@@ -220,14 +224,14 @@
         }
 
         .calendar-container {
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(15, 25, 35, 0.98);
             backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 24px;
             max-width: 380px;
             width: 90%;
-            border: 1px solid var(--border);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(79, 209, 197, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             animation: slideUp 0.3s ease-out;
         }
 
@@ -261,7 +265,7 @@
             width: 36px;
             height: 36px;
             border: none;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(30, 45, 55, 0.7);
             color: var(--text-primary);
             border-radius: 8px;
             cursor: pointer;
@@ -273,7 +277,8 @@
         }
 
         .calendar-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(79, 209, 197, 0.2);
+            color: var(--accent-primary);
             transform: scale(1.05);
         }
 
@@ -320,17 +325,17 @@
         }
 
         .calendar-day:hover:not(.calendar-day-empty):not(.calendar-day-other-month) {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(79, 209, 197, 0.15);
         }
 
         .calendar-day.calendar-day-selected {
-            background: linear-gradient(135deg, rgba(200, 200, 200, 0.4), rgba(160, 160, 160, 0.3));
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.4), rgba(56, 178, 172, 0.3));
             color: white;
             font-weight: 600;
         }
 
         .calendar-day.calendar-day-today {
-            border: 2px solid rgba(200, 200, 200, 0.5);
+            border: 2px solid rgba(79, 209, 197, 0.6);
         }
 
         .calendar-day.calendar-day-empty {
@@ -347,19 +352,20 @@
             padding: 14px;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(200, 200, 200, 0.3), rgba(160, 160, 160, 0.2));
-            color: white;
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.3), rgba(56, 178, 172, 0.2));
+            color: var(--accent-primary);
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 1px solid rgba(79, 209, 197, 0.2);
         }
 
         .calendar-confirm-btn:hover {
             transform: translateY(-2px);
-            background: linear-gradient(135deg, rgba(200, 200, 200, 0.4), rgba(160, 160, 160, 0.3));
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.4), rgba(56, 178, 172, 0.3));
+            box-shadow: 0 8px 24px rgba(79, 209, 197, 0.2);
         }
 
         .calendar-confirm-btn:active {
@@ -392,10 +398,11 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(20, 35, 45, 0.5);
             backdrop-filter: blur(10px);
             padding: 12px 16px;
-            border-radius: 12px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
         }
 
         .counter-btn {
@@ -403,7 +410,7 @@
             height: 40px;
             border: none;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(30, 45, 55, 0.7);
             color: var(--text-primary);
             font-size: 1.25rem;
             cursor: pointer;
@@ -415,7 +422,8 @@
         }
 
         .counter-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(79, 209, 197, 0.2);
+            color: var(--accent-primary);
             transform: scale(1.05);
         }
 
@@ -434,11 +442,11 @@
         .save-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.25), rgba(56, 178, 172, 0.15));
             backdrop-filter: blur(10px);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-primary);
+            border: 1px solid rgba(79, 209, 197, 0.2);
+            border-radius: 14px;
+            color: var(--accent-primary);
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             font-size: 0.9375rem;
@@ -449,8 +457,8 @@
 
         .save-btn:hover {
             transform: translateY(-1px);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, rgba(79, 209, 197, 0.3), rgba(56, 178, 172, 0.2));
+            box-shadow: 0 8px 24px rgba(79, 209, 197, 0.15);
         }
 
         .save-btn:active {
@@ -458,17 +466,20 @@
         }
 
         .save-btn.success {
-            background: linear-gradient(135deg, rgba(160, 160, 160, 0.3), rgba(120, 120, 120, 0.2));
+            background: linear-gradient(135deg, rgba(104, 211, 145, 0.3), rgba(72, 187, 120, 0.2));
+            border-color: rgba(104, 211, 145, 0.3);
+            color: var(--accent-success);
         }
 
         .period-selector {
             display: flex;
             gap: 8px;
             margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(20, 30, 40, 0.5);
             backdrop-filter: blur(10px);
-            padding: 4px;
-            border-radius: 12px;
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
         }
 
         .period-btn {
@@ -486,8 +497,8 @@
         }
 
         .period-btn.active {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
+            background: rgba(79, 209, 197, 0.12);
+            color: var(--accent-primary);
         }
 
         .chart-container {
@@ -500,10 +511,11 @@
             justify-content: space-around;
             height: 200px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(20, 35, 45, 0.4);
             backdrop-filter: blur(10px);
-            border-radius: 12px;
+            border-radius: 16px;
             margin-bottom: 16px;
+            border: 1px solid var(--border);
         }
 
         .bar-wrapper {
@@ -526,9 +538,9 @@
             padding-top: 8px;
         }
 
-        .bar-gym { background: linear-gradient(180deg, rgba(200, 200, 200, 0.4), rgba(180, 180, 180, 0.3)); }
-        .bar-class { background: linear-gradient(180deg, rgba(160, 160, 160, 0.4), rgba(140, 140, 140, 0.3)); }
-        .bar-tennis { background: linear-gradient(180deg, rgba(120, 120, 120, 0.4), rgba(100, 100, 100, 0.3)); }
+        .bar-gym { background: linear-gradient(180deg, rgba(79, 209, 197, 0.5), rgba(56, 178, 172, 0.3)); }
+        .bar-class { background: linear-gradient(180deg, rgba(104, 211, 145, 0.5), rgba(72, 187, 120, 0.3)); }
+        .bar-tennis { background: linear-gradient(180deg, rgba(56, 178, 172, 0.5), rgba(45, 156, 150, 0.3)); }
 
         .bar-value {
             font-weight: 600;
@@ -550,10 +562,10 @@
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(20, 35, 45, 0.5);
             backdrop-filter: blur(10px);
             padding: 16px;
-            border-radius: 12px;
+            border-radius: 14px;
             text-align: center;
             border: 1px solid var(--border);
         }
@@ -594,7 +606,7 @@
 
         .progress-bar-container {
             height: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(20, 35, 45, 0.6);
             border-radius: 6px;
             overflow: hidden;
             margin-bottom: 8px;
@@ -602,7 +614,7 @@
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, rgba(200, 200, 200, 0.6), rgba(160, 160, 160, 0.4));
+            background: linear-gradient(90deg, rgba(79, 209, 197, 0.7), rgba(56, 178, 172, 0.5));
             border-radius: 6px;
             transition: width 0.5s ease;
         }
@@ -632,11 +644,11 @@
         }
 
         .timeline-item {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(20, 35, 45, 0.5);
             backdrop-filter: blur(10px);
             padding: 16px;
-            border-radius: 12px;
-            border-left: 3px solid rgba(200, 200, 200, 0.4);
+            border-radius: 14px;
+            border-left: 3px solid rgba(79, 209, 197, 0.5);
         }
 
         .timeline-date {
