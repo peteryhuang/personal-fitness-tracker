@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fitness Goals">
+    <meta name="theme-color" content="#0a0e27">
+    <link rel="manifest" href="manifest.json">
+    <title>Peter's 2026 Fitness Goals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-tertiary: #737373;
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 80px;
+        }
+
+        header {
+            margin-bottom: 32px;
+            animation: slideDown 0.6s ease-out;
+            padding-top: env(safe-area-inset-top, 20px);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 400;
+        }
+
+        .sync-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .sync-status.syncing {
+            color: var(--accent-primary);
+        }
+
+        .sync-status.synced {
+            color: var(--accent-success);
+        }
+
+        .sync-status.error {
+            color: #ef4444;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 12px;
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .view {
+            display: none;
+            animation: viewFadeIn 0.4s ease-out;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        @keyframes viewFadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .week-selector button {
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .week-selector button:hover {
+            background: var(--bg-secondary);
+        }
+
+        .week-selector button:active {
+            transform: scale(0.95);
+        }
+
+        .week-display {
+            flex: 1;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background 0.2s ease;
+            position: relative;
+        }
+
+        .week-display:hover {
+            background: var(--bg-secondary);
+        }
+
+        .week-display:active {
+            transform: scale(0.98);
+        }
+
+        /* Date Picker Dropdown */
+        .date-picker-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 100;
+            min-width: 280px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: dropdownSlideIn 0.2s ease-out;
+        }
+
+        .date-picker-dropdown.active {
+            display: block;
+        }
+
+        @keyframes dropdownSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .date-picker-header {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .date-input-wrapper {
+            margin-bottom: 12px;
+        }
+
+        .date-input-wrapper input {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+        }
+
+        .date-input-wrapper input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .date-picker-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .date-picker-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .date-picker-btn.primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--text-primary);
+        }
+
+        .date-picker-btn.primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .date-picker-btn.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .date-picker-btn.secondary:hover {
+            background: var(--bg-primary);
+        }
+
+        .date-picker-btn:active {
+            transform: scale(0.98);
+        }
+
+        .activity-input {
+            margin-bottom: 16px;
+        }
+
+        .activity-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .activity-label span {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .icon-gym { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .icon-class { background: linear-gradient(135deg, #ec4899, #f43f5e); }
+        .icon-tennis { background: linear-gradient(135deg, #14b8a6, #06b6d4); }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+
+        .counter-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 400;
+        }
+
+        .counter-btn:hover {
+            background: var(--accent-primary);
+            transform: scale(1.05);
+        }
+
+        .counter-btn:active {
+            transform: scale(0.95);
+        }
+
+        .counter-value {
+            flex: 1;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .save-btn.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .period-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .period-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .period-btn.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            margin-bottom: 24px;
+        }
+
+        .activity-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bar {
+            width: 60px;
+            min-height: 20px;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 8px;
+        }
+
+        .bar-gym { background: linear-gradient(180deg, #6366f1, #8b5cf6); }
+        .bar-class { background: linear-gradient(180deg, #ec4899, #f43f5e); }
+        .bar-tennis { background: linear-gradient(180deg, #14b8a6, #06b6d4); }
+
+        .bar-value {
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .progress-section {
+            margin-bottom: 24px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .progress-percentage {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: var(--accent-primary);
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .timeline-section {
+            margin-top: 32px;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .timeline-item {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .timeline-stats {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .timeline-stat {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .timeline-stat strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 0.9375rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Peter's 2026 Fitness Goals</h1>
+            <p class="subtitle">Track your weekly activities</p>
+            <div class="sync-status" id="sync-status">
+                <span id="sync-icon">☁️</span>
+                <span id="sync-text">Connecting...</span>
+            </div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-view="tracker">Tracker</button>
+            <button class="tab" data-view="stats">Stats</button>
+        </div>
+
+        <div id="tracker-view" class="view active">
+            <div class="card">
+                <div class="week-selector">
+                    <button id="prev-week">←</button>
+                    <div class="week-display" id="week-display">
+                        Week 1, 2026
+                        <div class="date-picker-dropdown" id="date-picker-dropdown">
+                            <div class="date-picker-header">Jump to week:</div>
+                            <div class="date-input-wrapper">
+                                <input type="date" id="week-date-input">
+                            </div>
+                            <div class="date-picker-buttons">
+                                <button class="date-picker-btn secondary" id="cancel-date-picker">Cancel</button>
+                                <button class="date-picker-btn primary" id="confirm-date-picker">Go</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="next-week">→</button>
+                </div>
+
+                <div class="activity-input">
+                    <div class="activity-label">
+                        <span>💪 Gym</span>
+                        <div class="activity-icon icon-gym">🏋️</div>
+                    </div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" data-activity="gym" data-action="dec">−</button>
+                        <div class="counter-value" id="gym-counter">0</div>
+                        <button class="counter-btn" data-activity="gym" data-action="inc">+</button>
+                    </div>
+                </div>
+
+                <div class="activity-input">
+                    <div class="activity-label">
+                        <span>🏃 Fitness Class</span>
+                        <div class="activity-icon icon-class">⚡</div>
+                    </div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" data-activity="class" data-action="dec">−</button>
+                        <div class="counter-value" id="class-counter">0</div>
+                        <button class="counter-btn" data-activity="class" data-action="inc">+</button>
+                    </div>
+                </div>
+
+                <div class="activity-input">
+                    <div class="activity-label">
+                        <span>🎾 Tennis</span>
+                        <div class="activity-icon icon-tennis">🎯</div>
+                    </div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" data-activity="tennis" data-action="dec">−</button>
+                        <div class="counter-value" id="tennis-counter">0</div>
+                        <button class="counter-btn" data-activity="tennis" data-action="inc">+</button>
+                    </div>
+                </div>
+
+                <button class="save-btn" id="save-btn">💾 Save Week</button>
+            </div>
+        </div>
+
+        <div id="stats-view" class="view">
+            <div class="card">
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="week">Week</button>
+                    <button class="period-btn" data-period="month">Month</button>
+                    <button class="period-btn" data-period="year">Year</button>
+                </div>
+
+                <div class="week-selector">
+                    <button id="prev-period">←</button>
+                    <div class="week-display" id="period-display">
+                        Week 1, 2026
+                        <div class="date-picker-dropdown" id="period-date-picker-dropdown">
+                            <div class="date-picker-header">Jump to date:</div>
+                            <div class="date-input-wrapper">
+                                <input type="date" id="period-date-input">
+                            </div>
+                            <div class="date-picker-buttons">
+                                <button class="date-picker-btn secondary" id="cancel-period-date-picker">Cancel</button>
+                                <button class="date-picker-btn primary" id="confirm-period-date-picker">Go</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="next-period">→</button>
+                </div>
+
+                <div class="chart-container">
+                    <div class="activity-chart" id="activity-chart">
+                        <div class="bar-wrapper">
+                            <div class="bar bar-gym">
+                                <div class="bar-value">0</div>
+                            </div>
+                            <div class="bar-label">Gym</div>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar bar-class">
+                                <div class="bar-value">0</div>
+                            </div>
+                            <div class="bar-label">Class</div>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar bar-tennis">
+                                <div class="bar-value">0</div>
+                            </div>
+                            <div class="bar-label">Tennis</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-activities">0</div>
+                        <div class="stat-label">Total Activities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="target-progress">0%</div>
+                        <div class="stat-label">Target Progress</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">Overall Progress</span>
+                        <span class="progress-percentage" id="overall-percentage">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="overall-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="overall-current">0 activities</span>
+                        <span id="overall-target">Target: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-section">
+                <h2 class="section-title">Recent Activity</h2>
+                <div class="timeline" id="timeline">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div class="empty-state-text">No activity recorded yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get, child, query, orderByKey } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-h44vi3qDSh0JMwkNFTQfvnC7c-2TpVA",
+            authDomain: "fitness-tracker-a10c9.firebaseapp.com",
+            databaseURL: "https://fitness-tracker-a10c9-default-rtdb.firebaseio.com",
+            projectId: "fitness-tracker-a10c9",
+            storageBucket: "fitness-tracker-a10c9.firebasestorage.app",
+            messagingSenderId: "1016617184414",
+            appId: "1:1016617184414:web:e5f730d710cb4266641f8f",
+            measurementId: "G-LF89PZ4605"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Sync status management
+        function updateSyncStatus(status, message) {
+            const statusEl = document.getElementById('sync-status');
+            const iconEl = document.getElementById('sync-icon');
+            const textEl = document.getElementById('sync-text');
+            
+            statusEl.className = `sync-status ${status}`;
+            
+            if (status === 'syncing') {
+                iconEl.textContent = '⏳';
+                textEl.textContent = message || 'Syncing...';
+            } else if (status === 'synced') {
+                iconEl.textContent = '☁️';
+                textEl.textContent = message || 'Synced to cloud';
+            } else if (status === 'error') {
+                iconEl.textContent = '⚠️';
+                textEl.textContent = message || 'Sync error';
+            }
+        }
+
+        // Global state
+        let currentWeek = getWeekNumber(new Date());
+        let currentYear = new Date().getFullYear();
+        let weekData = { gym: 0, class: 0, tennis: 0 };
+
+        let statsWeek = currentWeek;
+        let statsMonth = new Date().getMonth();
+        let statsYear = currentYear;
+        let currentPeriod = 'week';
+
+        function getWeekNumber(date) {
+            // Week 1 starts on Monday, January 5, 2026
+            const year = date.getFullYear();
+            const week1Start = new Date(2026, 0, 5); // January 5, 2026 (Monday)
+            
+            if (year < 2026) {
+                return 1;
+            }
+            
+            // If date is before Week 1 start, it's part of previous year's last week
+            if (date < week1Start) {
+                return 52;
+            }
+            
+            // Calculate days since Week 1 start
+            const daysSinceWeek1 = Math.floor((date - week1Start) / 86400000);
+            
+            // Calculate week number (weeks start on Monday)
+            const weekNum = Math.floor(daysSinceWeek1 / 7) + 1;
+            
+            // Cap at 52 weeks
+            return weekNum > 52 ? 52 : weekNum;
+        }
+
+        function getWeekDates(year, week) {
+            // Week 1 starts on Monday, January 5, 2026
+            const week1Start = new Date(2026, 0, 5);
+            
+            // Calculate the Monday of the requested week
+            const daysOffset = (week - 1) * 7;
+            const weekStart = new Date(week1Start);
+            weekStart.setDate(week1Start.getDate() + daysOffset);
+            
+            // Week ends on Sunday (6 days after Monday)
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            return { start: weekStart, end: weekEnd };
+        }
+
+        function formatWeekDates(year, week) {
+            const dates = getWeekDates(year, week);
+            const options = { month: 'short', day: 'numeric' };
+            return `${dates.start.toLocaleDateString('en-US', options)} - ${dates.end.toLocaleDateString('en-US', options)}`;
+        }
+
+        function getWeekTarget(week) {
+            if (week >= 1 && week <= 13) return 3;
+            if (week >= 14 && week <= 26) return 4;
+            if (week >= 27 && week <= 39) return 5;
+            if (week >= 40 && week <= 52) return 6;
+            return 3;
+        }
+
+        function updatePeriodDisplay() {
+            const display = document.getElementById('period-display');
+            
+            if (currentPeriod === 'week') {
+                const dateRange = formatWeekDates(statsYear, statsWeek);
+                display.innerHTML = `Week ${statsWeek}: ${dateRange}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-picker-header">Jump to date:</div><div class="date-input-wrapper"><input type="date" id="period-date-input"></div><div class="date-picker-buttons"><button class="date-picker-btn secondary" id="cancel-period-date-picker">Cancel</button><button class="date-picker-btn primary" id="confirm-period-date-picker">Go</button></div></div>`;
+            } else if (currentPeriod === 'month') {
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+                display.innerHTML = `${monthNames[statsMonth]} ${statsYear}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-picker-header">Jump to date:</div><div class="date-input-wrapper"><input type="date" id="period-date-input"></div><div class="date-picker-buttons"><button class="date-picker-btn secondary" id="cancel-period-date-picker">Cancel</button><button class="date-picker-btn primary" id="confirm-period-date-picker">Go</button></div></div>`;
+            } else if (currentPeriod === 'year') {
+                display.innerHTML = `${statsYear}<div class="date-picker-dropdown" id="period-date-picker-dropdown"><div class="date-picker-header">Jump to date:</div><div class="date-input-wrapper"><input type="date" id="period-date-input"></div><div class="date-picker-buttons"><button class="date-picker-btn secondary" id="cancel-period-date-picker">Cancel</button><button class="date-picker-btn primary" id="confirm-period-date-picker">Go</button></div></div>`;
+            }
+            
+            // Re-attach event listeners for stats date picker
+            setupStatsDatePicker();
+        }
+
+        async function loadWeekData() {
+            updateSyncStatus('syncing', 'Loading...');
+            
+            const key = `week-${currentYear}-${currentWeek}`;
+            const dbRef = ref(database);
+            
+            try {
+                const snapshot = await get(child(dbRef, `fitness-data/${key}`));
+                
+                if (snapshot.exists()) {
+                    weekData = snapshot.val();
+                } else {
+                    weekData = { gym: 0, class: 0, tennis: 0 };
+                }
+                
+                updateCounters();
+                updateWeekDisplay();
+                updateSyncStatus('synced', 'Loaded from cloud');
+            } catch (error) {
+                console.error('Load error:', error);
+                weekData = { gym: 0, class: 0, tennis: 0 };
+                updateCounters();
+                updateWeekDisplay();
+                updateSyncStatus('error', 'Load failed');
+            }
+        }
+
+        async function saveWeekData() {
+            updateSyncStatus('syncing', 'Saving...');
+            
+            const key = `week-${currentYear}-${currentWeek}`;
+            
+            try {
+                await set(ref(database, `fitness-data/${key}`), weekData);
+                updateSyncStatus('synced', 'Saved to cloud');
+                
+                // Visual feedback
+                const btn = document.getElementById('save-btn');
+                btn.textContent = '✓ Saved!';
+                btn.classList.add('success');
+                
+                setTimeout(() => {
+                    btn.textContent = '💾 Save Week';
+                    btn.classList.remove('success');
+                }, 1500);
+            } catch (error) {
+                console.error('Save error:', error);
+                updateSyncStatus('error', 'Save failed');
+            }
+        }
+
+        async function saveWeekDataSilently() {
+            const key = `week-${currentYear}-${currentWeek}`;
+            try {
+                await set(ref(database, `fitness-data/${key}`), weekData);
+            } catch (error) {
+                console.error('Silent save error:', error);
+            }
+        }
+
+        function updateCounters() {
+            document.getElementById('gym-counter').textContent = weekData.gym;
+            document.getElementById('class-counter').textContent = weekData.class;
+            document.getElementById('tennis-counter').textContent = weekData.tennis;
+        }
+
+        function updateWeekDisplay() {
+            const dateRange = formatWeekDates(currentYear, currentWeek);
+            const weekDisplayEl = document.getElementById('week-display');
+            const dropdown = weekDisplayEl.querySelector('.date-picker-dropdown');
+            
+            // Update text content while preserving the dropdown
+            const textNode = Array.from(weekDisplayEl.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+            if (textNode) {
+                textNode.textContent = `Week ${currentWeek}: ${dateRange}`;
+            } else {
+                weekDisplayEl.insertBefore(
+                    document.createTextNode(`Week ${currentWeek}: ${dateRange}`),
+                    dropdown
+                );
+            }
+        }
+
+        async function initializeHistoricalData() {
+            // Check if data already exists
+            const dbRef = ref(database);
+            const snapshot = await get(child(dbRef, 'fitness-data'));
+            
+            if (snapshot.exists()) {
+                return; // Data already initialized
+            }
+
+            updateSyncStatus('syncing', 'Setting up...');
+
+            // Initialize with sample data
+            const sampleData = [
+                { year: 2026, week: 1, gym: 2, class: 1, tennis: 0 },
+                { year: 2026, week: 2, gym: 1, class: 2, tennis: 0 },
+                { year: 2026, week: 3, gym: 2, class: 1, tennis: 1 },
+                { year: 2026, week: 4, gym: 3, class: 1, tennis: 0 },
+                { year: 2026, week: 5, gym: 2, class: 2, tennis: 1 },
+            ];
+
+            for (const data of sampleData) {
+                const key = `week-${data.year}-${data.week}`;
+                await set(ref(database, `fitness-data/${key}`), {
+                    gym: data.gym,
+                    class: data.class,
+                    tennis: data.tennis
+                });
+            }
+        }
+
+        // Event listeners
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.view}-view`).classList.add('active');
+                
+                if (tab.dataset.view === 'stats') {
+                    updateStats();
+                }
+            });
+        });
+
+        document.querySelectorAll('.counter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const activity = btn.dataset.activity;
+                const action = btn.dataset.action;
+                
+                if (action === 'inc') {
+                    weekData[activity]++;
+                } else if (action === 'dec' && weekData[activity] > 0) {
+                    weekData[activity]--;
+                }
+                
+                updateCounters();
+            });
+        });
+
+        document.getElementById('prev-week').addEventListener('click', async () => {
+            await saveWeekDataSilently();
+            currentWeek--;
+            if (currentWeek < 1) {
+                currentWeek = 52;
+                currentYear--;
+            }
+            await loadWeekData();
+        });
+
+        document.getElementById('next-week').addEventListener('click', async () => {
+            await saveWeekDataSilently();
+            currentWeek++;
+            if (currentWeek > 52) {
+                currentWeek = 1;
+                currentYear++;
+            }
+            await loadWeekData();
+        });
+
+        document.getElementById('save-btn').addEventListener('click', saveWeekData);
+
+        // Tracker tab date picker functionality
+        const datePickerDropdown = document.getElementById('date-picker-dropdown');
+        const weekDisplayEl = document.getElementById('week-display');
+        const weekDateInput = document.getElementById('week-date-input');
+        const confirmDatePicker = document.getElementById('confirm-date-picker');
+        const cancelDatePicker = document.getElementById('cancel-date-picker');
+
+        // Set default date to current week
+        function setDatePickerToCurrentWeek() {
+            const dates = getWeekDates(currentYear, currentWeek);
+            const dateStr = dates.start.toISOString().split('T')[0];
+            weekDateInput.value = dateStr;
+        }
+
+        // Toggle date picker when clicking week display
+        weekDisplayEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setDatePickerToCurrentWeek();
+            datePickerDropdown.classList.toggle('active');
+            // Close stats date picker if open
+            const statsDatePicker = document.getElementById('period-date-picker-dropdown');
+            if (statsDatePicker) {
+                statsDatePicker.classList.remove('active');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!weekDisplayEl.contains(e.target)) {
+                datePickerDropdown.classList.remove('active');
+            }
+        });
+
+        // Cancel button
+        cancelDatePicker.addEventListener('click', (e) => {
+            e.stopPropagation();
+            datePickerDropdown.classList.remove('active');
+        });
+
+        // Confirm button - jump to selected week
+        confirmDatePicker.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const selectedDate = new Date(weekDateInput.value + 'T12:00:00');
+            if (!isNaN(selectedDate.getTime())) {
+                await saveWeekDataSilently();
+                currentYear = selectedDate.getFullYear();
+                currentWeek = getWeekNumber(selectedDate);
+                await loadWeekData();
+                datePickerDropdown.classList.remove('active');
+            }
+        });
+
+        // Allow Enter key to confirm
+        weekDateInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                confirmDatePicker.click();
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside it
+        datePickerDropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        document.querySelectorAll('.period-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPeriod = btn.dataset.period;
+                
+                if (currentPeriod === 'week') {
+                    statsWeek = getWeekNumber(new Date());
+                    statsYear = new Date().getFullYear();
+                } else if (currentPeriod === 'month') {
+                    statsMonth = new Date().getMonth();
+                    statsYear = new Date().getFullYear();
+                } else if (currentPeriod === 'year') {
+                    statsYear = new Date().getFullYear();
+                }
+                
+                updateStats();
+            });
+        });
+
+        // Stats tab date picker functionality
+        function setupStatsDatePicker() {
+            const periodDatePickerDropdown = document.getElementById('period-date-picker-dropdown');
+            const periodDisplayEl = document.getElementById('period-display');
+            const periodDateInput = document.getElementById('period-date-input');
+            const confirmPeriodDatePicker = document.getElementById('confirm-period-date-picker');
+            const cancelPeriodDatePicker = document.getElementById('cancel-period-date-picker');
+
+            if (!periodDatePickerDropdown || !periodDisplayEl) return;
+
+            // Set default date based on current period
+            function setDatePickerToCurrentPeriod() {
+                let dateStr;
+                if (currentPeriod === 'week') {
+                    const dates = getWeekDates(statsYear, statsWeek);
+                    dateStr = dates.start.toISOString().split('T')[0];
+                } else if (currentPeriod === 'month') {
+                    dateStr = `${statsYear}-${String(statsMonth + 1).padStart(2, '0')}-01`;
+                } else {
+                    dateStr = `${statsYear}-01-01`;
+                }
+                periodDateInput.value = dateStr;
+            }
+
+            // Toggle date picker when clicking period display
+            const clickHandler = (e) => {
+                e.stopPropagation();
+                setDatePickerToCurrentPeriod();
+                periodDatePickerDropdown.classList.toggle('active');
+                // Close tracker date picker if open
+                const trackerDatePicker = document.getElementById('date-picker-dropdown');
+                if (trackerDatePicker) {
+                    trackerDatePicker.classList.remove('active');
+                }
+            };
+            periodDisplayEl.removeEventListener('click', clickHandler);
+            periodDisplayEl.addEventListener('click', clickHandler);
+
+            // Cancel button
+            if (cancelPeriodDatePicker) {
+                cancelPeriodDatePicker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    periodDatePickerDropdown.classList.remove('active');
+                });
+            }
+
+            // Confirm button
+            if (confirmPeriodDatePicker) {
+                confirmPeriodDatePicker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const selectedDate = new Date(periodDateInput.value + 'T12:00:00');
+                    if (!isNaN(selectedDate.getTime())) {
+                        if (currentPeriod === 'week') {
+                            statsWeek = getWeekNumber(selectedDate);
+                            statsYear = selectedDate.getFullYear();
+                        } else if (currentPeriod === 'month') {
+                            statsMonth = selectedDate.getMonth();
+                            statsYear = selectedDate.getFullYear();
+                        } else if (currentPeriod === 'year') {
+                            statsYear = selectedDate.getFullYear();
+                        }
+                        updateStats();
+                        periodDatePickerDropdown.classList.remove('active');
+                    }
+                });
+            }
+
+            // Allow Enter key to confirm
+            if (periodDateInput) {
+                periodDateInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (confirmPeriodDatePicker) confirmPeriodDatePicker.click();
+                    }
+                });
+            }
+
+            // Prevent dropdown from closing when clicking inside it
+            periodDatePickerDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
+
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            const periodDatePicker = document.getElementById('period-date-picker-dropdown');
+            const periodDisplay = document.getElementById('period-display');
+            if (periodDatePicker && periodDisplay && !periodDisplay.contains(e.target)) {
+                periodDatePicker.classList.remove('active');
+            }
+        });
+
+        document.getElementById('prev-period').addEventListener('click', () => {
+            if (currentPeriod === 'week') {
+                statsWeek--;
+                if (statsWeek < 1) {
+                    statsWeek = 52;
+                    statsYear--;
+                }
+            } else if (currentPeriod === 'month') {
+                statsMonth--;
+                if (statsMonth < 0) {
+                    statsMonth = 11;
+                    statsYear--;
+                }
+            } else if (currentPeriod === 'year') {
+                statsYear--;
+            }
+            updateStats();
+        });
+
+        document.getElementById('next-period').addEventListener('click', () => {
+            if (currentPeriod === 'week') {
+                statsWeek++;
+                if (statsWeek > 52) {
+                    statsWeek = 1;
+                    statsYear++;
+                }
+            } else if (currentPeriod === 'month') {
+                statsMonth++;
+                if (statsMonth > 11) {
+                    statsMonth = 0;
+                    statsYear++;
+                }
+            } else if (currentPeriod === 'year') {
+                statsYear++;
+            }
+            updateStats();
+        });
+
+        async function updateStats() {
+            updatePeriodDisplay();
+            const stats = await calculateStats(currentPeriod);
+            
+            const maxValue = Math.max(stats.gym, stats.class, stats.tennis, 1);
+            const chart = document.getElementById('activity-chart');
+            const bars = chart.querySelectorAll('.bar');
+            
+            bars[0].style.height = `${(stats.gym / maxValue) * 100}%`;
+            bars[0].querySelector('.bar-value').textContent = stats.gym;
+            
+            bars[1].style.height = `${(stats.class / maxValue) * 100}%`;
+            bars[1].querySelector('.bar-value').textContent = stats.class;
+            
+            bars[2].style.height = `${(stats.tennis / maxValue) * 100}%`;
+            bars[2].querySelector('.bar-value').textContent = stats.tennis;
+            
+            const total = stats.gym + stats.class + stats.tennis;
+            document.getElementById('total-activities').textContent = total;
+            
+            const targetProgress = stats.target > 0 ? Math.round((total / stats.target) * 100) : 0;
+            document.getElementById('target-progress').textContent = `${targetProgress}%`;
+            
+            document.getElementById('overall-percentage').textContent = `${targetProgress}%`;
+            document.getElementById('overall-progress-bar').style.width = `${Math.min(targetProgress, 100)}%`;
+            document.getElementById('overall-current').textContent = `${total} activities`;
+            document.getElementById('overall-target').textContent = `Target: ${stats.target.toFixed(1)}`;
+            
+            await updateTimeline();
+        }
+
+        async function calculateStats(period) {
+            let stats = { gym: 0, class: 0, tennis: 0, target: 0 };
+            
+            try {
+                const dbRef = ref(database);
+                const snapshot = await get(child(dbRef, 'fitness-data'));
+                
+                if (snapshot.exists()) {
+                    const allData = snapshot.val();
+                    
+                    for (const [key, data] of Object.entries(allData)) {
+                        const [_, year, week] = key.split('-');
+                        const weekNum = parseInt(week);
+                        const yearNum = parseInt(year);
+                        
+                        let include = false;
+                        if (period === 'week') {
+                            include = weekNum === statsWeek && yearNum === statsYear;
+                        } else if (period === 'month') {
+                            const dates = getWeekDates(yearNum, weekNum);
+                            include = dates.start.getMonth() === statsMonth && yearNum === statsYear;
+                        } else if (period === 'year') {
+                            include = yearNum === statsYear;
+                        }
+                        
+                        if (include) {
+                            stats.gym += data.gym || 0;
+                            stats.class += data.class || 0;
+                            stats.tennis += data.tennis || 0;
+                            stats.target += getWeekTarget(weekNum);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Calculate stats error:', error);
+            }
+            
+            return stats;
+        }
+
+        async function updateTimeline() {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = '';
+            
+            try {
+                const dbRef = ref(database);
+                const snapshot = await get(child(dbRef, 'fitness-data'));
+                
+                if (!snapshot.exists()) {
+                    timeline.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <div class="empty-state-text">No activity recorded yet</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const allData = snapshot.val();
+                const sortedKeys = Object.keys(allData).sort().reverse().slice(0, 10);
+                
+                for (const key of sortedKeys) {
+                    const [_, year, week] = key.split('-');
+                    const data = allData[key];
+                    const total = data.gym + data.class + data.tennis;
+                    
+                    if (total > 0) {
+                        const item = document.createElement('div');
+                        item.className = 'timeline-item';
+                        item.innerHTML = `
+                            <div class="timeline-date">Week ${week}, ${year}</div>
+                            <div class="timeline-stats">
+                                <div class="timeline-stat">💪 <strong>${data.gym}</strong></div>
+                                <div class="timeline-stat">🏃 <strong>${data.class}</strong></div>
+                                <div class="timeline-stat">🎾 <strong>${data.tennis}</strong></div>
+                                <div class="timeline-stat">Total: <strong>${total}</strong></div>
+                            </div>
+                        `;
+                        timeline.appendChild(item);
+                    }
+                }
+            } catch (error) {
+                console.error('Timeline error:', error);
+            }
+        }
+
+        // Initialize
+        async function init() {
+            try {
+                updateSyncStatus('syncing', 'Connecting...');
+                await initializeHistoricalData();
+                await loadWeekData();
+                updateSyncStatus('synced', 'Connected to cloud');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                updateSyncStatus('error', 'Connection failed');
+            }
+        }
+        
+        init();
+    </script>
+</body>
+</html>
