@@ -5,12 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Fitness Tracker">
-    <meta name="theme-color" content="#4fd1c5">
+    <meta name="apple-mobile-web-app-title" content="Ritual">
+    <meta name="theme-color" content="#1C1A17">
     <link rel="manifest" href="manifest.json">
-    <title>Fitness Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Ritual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           AGED TEAK PALETTE
+           Background:   #1C1A17
+           Card:         rgba(255,245,225,0.045)
+           Border:       rgba(240,225,190,0.08)
+           Text primary: #ECE5D8
+           Text mid:     #8A7E70
+           Text dim:     #5C5448
+           Gold:         #BF955A → #DDB878
+           Sage (saved): #7AAA82
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+        :root {
+            --bg-primary:    #1C1A17;
+            --bg-deep:       #161410;
+            --bg-card:       rgba(255, 245, 225, 0.045);
+            --bg-card-hover: rgba(255, 245, 225, 0.065);
+            --border:        rgba(240, 225, 190, 0.08);
+            --border-gold:   rgba(191, 149, 90, 0.25);
+            --linen:         #ECE5D8;
+            --drift:         #8A7E70;
+            --drift-dim:     #5C5448;
+            --gold:          #BF955A;
+            --gold-lt:       #DDB878;
+            --gold-glow:     rgba(191, 149, 90, 0.18);
+            --gold-dim:      rgba(191, 149, 90, 0.1);
+            --sage:          #7AAA82;
+            --sage-dim:      rgba(122, 170, 130, 0.14);
+            --shadow:        rgba(0, 0, 0, 0.5);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,31 +49,38 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        :root {
-            --bg-primary: #0a0f14;
-            --bg-secondary: rgba(20, 30, 40, 0.4);
-            --bg-card: rgba(25, 35, 45, 0.6);
-            --accent-primary: #4fd1c5;
-            --accent-secondary: #38b2ac;
-            --accent-success: #68d391;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-tertiary: #64748b;
-            --border: rgba(255, 255, 255, 0.06);
-            --shadow: rgba(0, 0, 0, 0.5);
-            --gradient-subtle: linear-gradient(135deg, rgba(79, 209, 197, 0.05), rgba(56, 178, 172, 0.02));
-            --gradient-card: linear-gradient(145deg, rgba(30, 45, 55, 0.7), rgba(20, 35, 45, 0.5));
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Jost', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
-            color: var(--text-primary);
+            color: var(--linen);
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Atmospheric background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 100% 50% at 50% -5%, rgba(191,149,90,0.13) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 95% 100%, rgba(122,170,130,0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+            background-size: 200px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
@@ -54,52 +92,57 @@
             padding-bottom: 80px;
         }
 
+        /* ── Header ── */
         header {
-            margin-bottom: 32px;
-            animation: slideDown 0.6s ease-out;
+            margin-bottom: 28px;
             padding-top: env(safe-area-inset-top, 20px);
+            animation: slideDown 0.7s ease-out both;
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-eyebrow {
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(191, 149, 90, 0.5);
+            margin-bottom: 5px;
         }
 
         h1 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            letter-spacing: -0.02em;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--linen);
+            letter-spacing: -0.01em;
+            line-height: 1.1;
         }
 
-        .subtitle {
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
-            font-weight: 400;
+        h1 em {
+            font-style: italic;
+            color: var(--gold-lt);
         }
 
+        /* ── Tabs ── */
         .tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 24px;
-            background: rgba(20, 30, 40, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 6px;
-            border-radius: 14px;
-            animation: fadeIn 0.8s ease-out 0.2s both;
+            background: rgba(255, 245, 225, 0.03);
+            backdrop-filter: blur(12px);
+            padding: 5px;
+            border-radius: 13px;
+            animation: fadeUp 0.7s ease-out 0.1s both;
             border: 1px solid var(--border);
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeUp {
             from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .tab {
@@ -107,378 +150,273 @@
             padding: 10px 16px;
             border: none;
             background: transparent;
-            color: var(--text-tertiary);
-            font-family: 'Inter', sans-serif;
+            color: var(--drift-dim);
+            font-family: 'Jost', sans-serif;
             font-weight: 500;
-            font-size: 0.875rem;
-            border-radius: 10px;
+            font-size: 0.8125rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-radius: 9px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         .tab.active {
-            background: rgba(79, 209, 197, 0.12);
-            color: var(--accent-primary);
+            background: linear-gradient(135deg, rgba(191,149,90,0.24), rgba(191,149,90,0.1));
+            color: var(--gold-lt);
+            box-shadow: 0 2px 12px rgba(191,149,90,0.14);
         }
 
+        .tab:hover:not(.active) {
+            color: var(--drift);
+            background: rgba(255,245,225,0.03);
+        }
+
+        /* ── Views ── */
         .view {
             display: none;
-            animation: viewFadeIn 0.4s ease-out;
+            animation: viewIn 0.4s ease-out both;
         }
 
-        .view.active {
-            display: block;
+        .view.active { display: block; }
+
+        @keyframes viewIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes viewFadeIn {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
+        /* ── Card ── */
         .card {
-            background: var(--gradient-card);
+            background: var(--bg-card);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 16px;
+            padding: 22px;
+            margin-bottom: 14px;
             border: 1px solid var(--border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
             transition: transform 0.2s ease;
         }
 
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,245,220,0.1), transparent);
+        }
+
+        /* ── Week selector ── */
         .week-selector {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 20px;
             align-items: center;
         }
 
         .week-selector button {
-            padding: 10px 14px;
-            background: rgba(30, 45, 55, 0.6);
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-primary);
+            border-radius: 50%;
+            color: var(--drift-dim);
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Jost', sans-serif;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 400;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .week-selector button:hover {
-            background: rgba(40, 55, 65, 0.7);
-            border-color: rgba(79, 209, 197, 0.3);
+            border-color: var(--border-gold);
+            color: var(--gold-lt);
+            background: var(--gold-dim);
         }
 
-        .week-selector button:active {
-            transform: scale(0.95);
-        }
+        .week-selector button:active { transform: scale(0.93); }
 
         .week-display {
             flex: 1;
             text-align: center;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9375rem;
-            font-weight: 500;
-            color: var(--text-primary);
             cursor: pointer;
-            padding: 10px;
+            padding: 8px;
             border-radius: 10px;
             transition: background 0.2s ease;
             position: relative;
         }
 
-        .week-display:hover {
-            background: rgba(79, 209, 197, 0.08);
-        }
+        .week-display:hover { background: var(--gold-dim); }
 
-        .week-display:active {
-            transform: scale(0.98);
-        }
-
-        /* Custom Calendar Modal */
-        .calendar-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.2s ease-out;
-        }
-
-        .calendar-modal.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .calendar-container {
-            background: rgba(15, 25, 35, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 380px;
-            width: 90%;
-            border: 1px solid rgba(79, 209, 197, 0.15);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .calendar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        .calendar-month-year {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--text-primary);
+        .week-display-label {
+            font-size: 9px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: rgba(191,149,90,0.45);
+            margin-bottom: 3px;
         }
 
-        .calendar-nav-btn {
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: rgba(30, 45, 55, 0.7);
-            color: var(--text-primary);
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.2s ease;
-        }
-
-        .calendar-nav-btn:hover {
-            background: rgba(79, 209, 197, 0.2);
-            color: var(--accent-primary);
-            transform: scale(1.05);
-        }
-
-        .calendar-nav-btn:active {
-            transform: scale(0.95);
-        }
-
-        .calendar-weekdays {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .calendar-weekday {
-            text-align: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-tertiary);
-            padding: 8px 0;
-            text-transform: uppercase;
-        }
-
-        .calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            border: none;
-            background: transparent;
-            color: var(--text-primary);
-            border-radius: 10px;
+        .week-display-range {
+            font-family: 'Playfair Display', serif;
             font-size: 0.9375rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-weight: 400;
+            color: var(--linen);
         }
 
-        .calendar-day:hover:not(.calendar-day-empty):not(.calendar-day-other-month) {
-            background: rgba(79, 209, 197, 0.15);
-        }
-
-        .calendar-day.calendar-day-selected {
-            background: linear-gradient(135deg, rgba(79, 209, 197, 0.4), rgba(56, 178, 172, 0.3));
-            color: white;
-            font-weight: 600;
-        }
-
-        .calendar-day.calendar-day-today {
-            border: 2px solid rgba(79, 209, 197, 0.6);
-        }
-
-        .calendar-day.calendar-day-empty {
-            cursor: default;
-        }
-
-        .calendar-day.calendar-day-other-month {
-            color: var(--text-tertiary);
-            opacity: 0.4;
-        }
-
-        .calendar-confirm-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(79, 209, 197, 0.3), rgba(56, 178, 172, 0.2));
-            color: var(--accent-primary);
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(79, 209, 197, 0.2);
-        }
-
-        .calendar-confirm-btn:hover {
-            transform: translateY(-2px);
-            background: linear-gradient(135deg, rgba(79, 209, 197, 0.4), rgba(56, 178, 172, 0.3));
-            box-shadow: 0 8px 24px rgba(79, 209, 197, 0.2);
-        }
-
-        .calendar-confirm-btn:active {
-            transform: translateY(0);
-        }
-
-        .calendar-confirm-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .activity-input {
-            margin-bottom: 16px;
-        }
+        /* ── Activity input ── */
+        .activity-input { margin-bottom: 14px; }
 
         .activity-label {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .activity-label span {
-            font-weight: 500;
-            font-size: 0.9375rem;
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--linen);
+        }
+
+        .activity-sublabel {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--drift-dim);
+            letter-spacing: 0.04em;
         }
 
         .counter-controls {
             display: flex;
             align-items: center;
-            gap: 16px;
-            background: rgba(20, 35, 45, 0.5);
+            gap: 0;
+            background: rgba(255,245,220,0.03);
             backdrop-filter: blur(10px);
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 14px;
             border: 1px solid var(--border);
         }
 
         .counter-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
             border-radius: 10px;
-            background: rgba(30, 45, 55, 0.7);
-            color: var(--text-primary);
+            background: var(--bg-card);
+            color: var(--drift);
             font-size: 1.25rem;
+            font-weight: 300;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 400;
+            font-family: 'Jost', sans-serif;
         }
 
         .counter-btn:hover {
-            background: rgba(79, 209, 197, 0.2);
-            color: var(--accent-primary);
-            transform: scale(1.05);
+            border-color: var(--border-gold);
+            color: var(--gold-lt);
+            background: var(--gold-dim);
         }
 
-        .counter-btn:active {
-            transform: scale(0.95);
+        .counter-btn:active { transform: scale(0.92); }
+
+        .counter-btn.inc {
+            background: var(--gold-dim);
+            border-color: rgba(191,149,90,0.26);
+            color: var(--gold-lt);
+        }
+
+        .counter-btn.inc:hover {
+            background: rgba(191,149,90,0.2);
+            box-shadow: 0 0 16px rgba(191,149,90,0.15);
         }
 
         .counter-value {
             flex: 1;
             text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--linen);
+            line-height: 1;
         }
 
+        .counter-value.zero { color: var(--drift-dim); }
+
+        /* activity progress bar */
+        .activity-bar {
+            height: 2px;
+            background: rgba(255,245,220,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .activity-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.5s ease;
+        }
+
+        /* ── Save button ── */
         .save-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, rgba(79, 209, 197, 0.25), rgba(56, 178, 172, 0.15));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(79, 209, 197, 0.2);
+            padding: 15px;
+            background: linear-gradient(135deg, #A87A30, #7A5518);
+            border: none;
             border-radius: 14px;
-            color: var(--accent-primary);
-            font-family: 'Inter', sans-serif;
+            color: #F8EDD4;
+            font-family: 'Jost', sans-serif;
             font-weight: 600;
-            font-size: 0.9375rem;
+            font-size: 0.8125rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 8px;
+            transition: all 0.25s ease;
+            margin-top: 6px;
+            box-shadow: 0 5px 20px rgba(168,122,48,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            border-radius: inherit;
         }
 
         .save-btn:hover {
-            transform: translateY(-1px);
-            background: linear-gradient(135deg, rgba(79, 209, 197, 0.3), rgba(56, 178, 172, 0.2));
-            box-shadow: 0 8px 24px rgba(79, 209, 197, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(168,122,48,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
         }
 
-        .save-btn:active {
-            transform: translateY(0);
-        }
+        .save-btn:active { transform: translateY(0); }
 
         .save-btn.success {
-            background: linear-gradient(135deg, rgba(104, 211, 145, 0.3), rgba(72, 187, 120, 0.2));
-            border-color: rgba(104, 211, 145, 0.3);
-            color: var(--accent-success);
+            background: linear-gradient(135deg, #507A56, #345A3A);
+            box-shadow: 0 5px 20px rgba(80,122,86,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            color: #D8F0DC;
         }
 
+        /* ── Stats: Period selector ── */
         .period-selector {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            background: rgba(20, 30, 40, 0.5);
+            gap: 6px;
+            margin-bottom: 18px;
+            background: rgba(255,245,225,0.03);
             backdrop-filter: blur(10px);
-            padding: 6px;
-            border-radius: 14px;
+            padding: 5px;
+            border-radius: 13px;
             border: 1px solid var(--border);
         }
 
@@ -487,35 +425,49 @@
             padding: 8px 12px;
             border: none;
             background: transparent;
-            color: var(--text-tertiary);
-            font-family: 'Inter', sans-serif;
+            color: var(--drift-dim);
+            font-family: 'Jost', sans-serif;
             font-weight: 500;
-            font-size: 0.875rem;
-            border-radius: 10px;
+            font-size: 0.8125rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-radius: 9px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .period-btn.active {
-            background: rgba(79, 209, 197, 0.12);
-            color: var(--accent-primary);
+            background: var(--gold-dim);
+            color: var(--gold-lt);
         }
 
-        .chart-container {
-            margin-bottom: 24px;
+        .period-btn:hover:not(.active) {
+            color: var(--drift);
+            background: rgba(255,245,225,0.03);
         }
+
+        /* ── Bar chart ── */
+        .chart-container { margin-bottom: 20px; }
 
         .activity-chart {
             display: flex;
             align-items: flex-end;
             justify-content: space-around;
-            height: 200px;
-            padding: 20px;
-            background: rgba(20, 35, 45, 0.4);
+            height: 180px;
+            padding: 16px;
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
             border-radius: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .activity-chart::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,245,220,0.1), transparent);
         }
 
         .bar-wrapper {
@@ -523,191 +475,388 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .bar {
-            width: 60px;
-            min-height: 20px;
-            border-radius: 8px 8px 0 0;
+            width: 52px;
+            min-height: 16px;
+            border-radius: 7px 7px 2px 2px;
             position: relative;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding-top: 8px;
         }
 
-        .bar-gym { background: linear-gradient(180deg, rgba(79, 209, 197, 0.5), rgba(56, 178, 172, 0.3)); }
-        .bar-class { background: linear-gradient(180deg, rgba(104, 211, 145, 0.5), rgba(72, 187, 120, 0.3)); }
-        .bar-tennis { background: linear-gradient(180deg, rgba(56, 178, 172, 0.5), rgba(45, 156, 150, 0.3)); }
+        .bar-gym    { background: linear-gradient(180deg, rgba(191,149,90,0.65), rgba(191,149,90,0.28)); }
+        .bar-class  { background: linear-gradient(180deg, rgba(122,170,130,0.6), rgba(122,170,130,0.24)); }
+        .bar-tennis { background: linear-gradient(180deg, rgba(168,122,58,0.65), rgba(168,122,58,0.28)); }
 
         .bar-value {
-            font-weight: 600;
+            font-family: 'Playfair Display', serif;
             font-size: 1rem;
-            color: white;
+            font-weight: 400;
+            color: var(--linen);
         }
 
         .bar-label {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
+            font-size: 0.6875rem;
+            letter-spacing: 0.08em;
+            color: var(--drift-dim);
             text-align: center;
+            text-transform: uppercase;
         }
 
+        /* ── Stats grid ── */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: rgba(20, 35, 45, 0.5);
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
-            padding: 16px;
+            padding: 16px 14px;
             border-radius: 14px;
             text-align: center;
             border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,245,220,0.08), transparent);
+        }
+
+        .stat-card.gold-tile {
+            background: var(--gold-dim);
+            border-color: rgba(191,149,90,0.18);
+        }
+
+        .stat-card.sage-tile {
+            background: var(--sage-dim);
+            border-color: rgba(122,170,130,0.16);
         }
 
         .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 300;
+            color: var(--linen);
             margin-bottom: 4px;
+            line-height: 1;
         }
+
+        .gold-tile .stat-value { color: var(--gold-lt); }
+        .sage-tile .stat-value { color: #9EC8A4; }
 
         .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--drift-dim);
+            font-weight: 400;
         }
 
-        .progress-section {
-            margin-bottom: 24px;
-        }
+        /* ── Progress section ── */
+        .progress-section { margin-bottom: 20px; }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            align-items: baseline;
+            margin-bottom: 10px;
         }
 
         .progress-label {
-            font-weight: 500;
-            font-size: 0.9375rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--drift);
+            letter-spacing: 0.02em;
         }
 
         .progress-percentage {
-            font-weight: 600;
-            font-size: 1.125rem;
-            color: var(--text-primary);
+            font-family: 'Playfair Display', serif;
+            font-weight: 300;
+            font-size: 1.25rem;
+            color: var(--linen);
         }
 
         .progress-bar-container {
-            height: 12px;
-            background: rgba(20, 35, 45, 0.6);
-            border-radius: 6px;
+            height: 3px;
+            background: rgba(255,245,220,0.07);
+            border-radius: 3px;
             overflow: hidden;
             margin-bottom: 8px;
         }
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, rgba(79, 209, 197, 0.7), rgba(56, 178, 172, 0.5));
-            border-radius: 6px;
-            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #BF955A, #DDB878);
+            border-radius: 3px;
+            transition: width 0.6s ease;
         }
 
         .progress-text {
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            color: var(--text-tertiary);
+            color: var(--drift-dim);
+            font-weight: 300;
         }
 
-        .timeline-section {
-            margin-top: 32px;
-        }
+        /* ── Timeline ── */
+        .timeline-section { margin-top: 28px; }
 
         .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 14px;
+            color: var(--drift);
         }
 
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .timeline { display: flex; flex-direction: column; gap: 10px; }
 
         .timeline-item {
-            background: rgba(20, 35, 45, 0.5);
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
-            padding: 16px;
-            border-radius: 14px;
-            border-left: 3px solid rgba(79, 209, 197, 0.5);
+            padding: 14px 16px;
+            border-radius: 0 13px 13px 0;
+            border: 1px solid var(--border);
+            border-left: 2px solid rgba(191,149,90,0.35);
+            transition: border-left-color 0.2s ease;
         }
+
+        .timeline-item:hover { border-left-color: rgba(191,149,90,0.6); }
 
         .timeline-date {
-            font-size: 0.875rem;
-            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            color: var(--drift-dim);
             margin-bottom: 8px;
+            font-weight: 300;
         }
 
-        .timeline-stats {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
+        .timeline-stats { display: flex; gap: 16px; flex-wrap: wrap; }
 
         .timeline-stat {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
+            font-size: 0.8125rem;
+            color: var(--drift);
+            font-weight: 300;
         }
 
         .timeline-stat strong {
-            color: var(--text-primary);
-            font-weight: 600;
+            color: var(--linen);
+            font-weight: 500;
         }
 
+        /* ── Empty state ── */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text-tertiary);
+            padding: 48px 20px;
+            color: var(--drift-dim);
         }
 
         .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            opacity: 0.5;
+            font-size: 2.5rem;
+            margin-bottom: 14px;
+            opacity: 0.35;
         }
 
         .empty-state-text {
-            font-size: 0.9375rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--drift-dim);
         }
 
+        /* ── Calendar Modal ── */
+        .calendar-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .calendar-modal.active { display: flex; animation: modalIn 0.25s ease-out both; }
+
+        @keyframes modalIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .calendar-container {
+            background: #1A1814;
+            border-radius: 22px;
+            padding: 24px;
+            max-width: 360px;
+            width: 90%;
+            border: 1px solid rgba(191,149,90,0.18);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,245,220,0.03);
+            animation: calIn 0.3s cubic-bezier(0.34,1.2,0.64,1) both;
+        }
+
+        @keyframes calIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .calendar-month-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--linen);
+            letter-spacing: 0.04em;
+        }
+
+        .calendar-nav-btn {
+            width: 34px;
+            height: 34px;
+            border: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--drift);
+            border-radius: 9px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--gold-dim);
+            border-color: var(--border-gold);
+            color: var(--gold-lt);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--drift-dim);
+            padding: 6px 0;
+            text-transform: uppercase;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: none;
+            background: transparent;
+            color: var(--drift);
+            border-radius: 9px;
+            font-family: 'Jost', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day:hover:not(.calendar-day-empty):not(.calendar-day-other-month) {
+            background: var(--gold-dim);
+            color: var(--gold-lt);
+        }
+
+        .calendar-day.calendar-day-selected {
+            background: linear-gradient(135deg, rgba(191,149,90,0.48), rgba(191,149,90,0.24));
+            color: var(--linen);
+            font-weight: 500;
+        }
+
+        .calendar-day.calendar-day-today {
+            border: 1.5px solid rgba(191,149,90,0.5);
+            color: var(--linen);
+        }
+
+        .calendar-day.calendar-day-empty { cursor: default; }
+
+        .calendar-day.calendar-day-other-month {
+            color: var(--drift-dim);
+            opacity: 0.35;
+        }
+
+        .calendar-confirm-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gold-dim);
+            border: 1px solid var(--border-gold);
+            color: var(--gold-lt);
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-confirm-btn:hover {
+            background: rgba(191,149,90,0.2);
+            box-shadow: 0 6px 20px rgba(191,149,90,0.18);
+            transform: translateY(-1px);
+        }
+
+        .calendar-confirm-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── Responsive ── */
         @media (max-width: 480px) {
-            .container {
-                padding: 16px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+            .container { padding: 14px; }
+            h1 { font-size: 1.75rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Fitness Tracker</h1>
+            <div class="header-eyebrow">Your Ritual</div>
+            <h1>Move.<br><em>Feel alive.</em></h1>
         </header>
 
         <div class="tabs">
@@ -715,51 +864,68 @@
             <button class="tab" data-view="stats">Stats</button>
         </div>
 
+        <!-- ── TRACKER VIEW ── -->
         <div id="tracker-view" class="view active">
             <div class="card">
                 <div class="week-selector">
                     <button id="prev-week">←</button>
-                    <div class="week-display" id="week-display">Week 1, 2026</div>
+                    <div class="week-display" id="week-display">
+                        <div class="week-display-label">Week 1</div>
+                        <div class="week-display-range">Jan 5 – Jan 11</div>
+                    </div>
                     <button id="next-week">→</button>
                 </div>
 
                 <div class="activity-input">
                     <div class="activity-label">
                         <span>💪 Gym</span>
+                        <span class="activity-sublabel">Strength & conditioning</span>
                     </div>
                     <div class="counter-controls">
                         <button class="counter-btn" data-activity="gym" data-action="dec">−</button>
                         <div class="counter-value" id="gym-counter">0</div>
-                        <button class="counter-btn" data-activity="gym" data-action="inc">+</button>
+                        <button class="counter-btn inc" data-activity="gym" data-action="inc">+</button>
+                    </div>
+                    <div class="activity-bar">
+                        <div class="activity-bar-fill" id="gym-bar" style="width:0%;background:linear-gradient(90deg,#BF955A,#DDB878)"></div>
                     </div>
                 </div>
 
                 <div class="activity-input">
                     <div class="activity-label">
                         <span>🏃 Fitness Class</span>
+                        <span class="activity-sublabel">With your neighbor</span>
                     </div>
                     <div class="counter-controls">
                         <button class="counter-btn" data-activity="class" data-action="dec">−</button>
-                        <div class="counter-value" id="class-counter">0</div>
-                        <button class="counter-btn" data-activity="class" data-action="inc">+</button>
+                        <div class="counter-value zero" id="class-counter">0</div>
+                        <button class="counter-btn inc" data-activity="class" data-action="inc">+</button>
+                    </div>
+                    <div class="activity-bar">
+                        <div class="activity-bar-fill" id="class-bar" style="width:0%;background:linear-gradient(90deg,#7AAA82,#9EC8A4)"></div>
                     </div>
                 </div>
 
                 <div class="activity-input">
                     <div class="activity-label">
                         <span>🎾 Tennis</span>
+                        <span class="activity-sublabel">Play & compete</span>
                     </div>
                     <div class="counter-controls">
                         <button class="counter-btn" data-activity="tennis" data-action="dec">−</button>
-                        <div class="counter-value" id="tennis-counter">0</div>
-                        <button class="counter-btn" data-activity="tennis" data-action="inc">+</button>
+                        <div class="counter-value zero" id="tennis-counter">0</div>
+                        <button class="counter-btn inc" data-activity="tennis" data-action="inc">+</button>
+                    </div>
+                    <div class="activity-bar">
+                        <div class="activity-bar-fill" id="tennis-bar" style="width:0%;background:linear-gradient(90deg,#A87A3A,#C89A58)"></div>
                     </div>
                 </div>
 
-                <button class="save-btn" id="save-btn">💾 Save Week</button>
+                <button class="save-btn" id="save-btn">✦ &nbsp; Save Week</button>
             </div>
         </div>
 
+        <!-- ── STATS VIEW ── -->
         <div id="stats-view" class="view">
             <div class="card">
                 <div class="period-selector">
@@ -771,17 +937,8 @@
                 <div class="week-selector">
                     <button id="prev-period">←</button>
                     <div class="week-display" id="period-display">
-                        Week 1, 2026
-                        <div class="date-picker-dropdown" id="period-date-picker-dropdown">
-                            <div class="date-picker-header">Jump to date:</div>
-                            <div class="date-input-wrapper">
-                                <input type="date" id="period-date-input">
-                            </div>
-                            <div class="date-picker-buttons">
-                                <button class="date-picker-btn secondary" id="cancel-period-date-picker">Cancel</button>
-                                <button class="date-picker-btn primary" id="confirm-period-date-picker">Go</button>
-                            </div>
-                        </div>
+                        <div class="week-display-label">Week 1</div>
+                        <div class="week-display-range">Jan 5 – Jan 11</div>
                     </div>
                     <button id="next-period">→</button>
                 </div>
@@ -789,19 +946,19 @@
                 <div class="chart-container">
                     <div class="activity-chart" id="activity-chart">
                         <div class="bar-wrapper">
-                            <div class="bar bar-gym">
+                            <div class="bar bar-gym" style="height:20px">
                                 <div class="bar-value">0</div>
                             </div>
                             <div class="bar-label">Gym</div>
                         </div>
                         <div class="bar-wrapper">
-                            <div class="bar bar-class">
+                            <div class="bar bar-class" style="height:20px">
                                 <div class="bar-value">0</div>
                             </div>
                             <div class="bar-label">Class</div>
                         </div>
                         <div class="bar-wrapper">
-                            <div class="bar bar-tennis">
+                            <div class="bar bar-tennis" style="height:20px">
                                 <div class="bar-value">0</div>
                             </div>
                             <div class="bar-label">Tennis</div>
@@ -810,11 +967,11 @@
                 </div>
 
                 <div class="stats-grid">
-                    <div class="stat-card">
+                    <div class="stat-card gold-tile">
                         <div class="stat-value" id="total-activities">0</div>
                         <div class="stat-label">Total Activities</div>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card sage-tile">
                         <div class="stat-value" id="target-progress">0%</div>
                         <div class="stat-label">Target Progress</div>
                     </div>
@@ -839,7 +996,7 @@
                 <h2 class="section-title">Recent Activity</h2>
                 <div class="timeline" id="timeline">
                     <div class="empty-state">
-                        <div class="empty-state-icon">📊</div>
+                        <div class="empty-state-icon">✦</div>
                         <div class="empty-state-text">No activity recorded yet</div>
                     </div>
                 </div>
@@ -847,15 +1004,14 @@
         </div>
     </div>
 
-    <!-- Custom Calendar Modal -->
+    <!-- ── Calendar Modal ── -->
     <div class="calendar-modal" id="calendar-modal">
         <div class="calendar-container">
             <div class="calendar-header">
                 <button class="calendar-nav-btn" id="calendar-prev-month">←</button>
-                <div class="calendar-month-year" id="calendar-month-year">JAN 2026</div>
+                <div class="calendar-month-year" id="calendar-month-year">January 2026</div>
                 <button class="calendar-nav-btn" id="calendar-next-month">→</button>
             </div>
-            
             <div class="calendar-weekdays">
                 <div class="calendar-weekday">S</div>
                 <div class="calendar-weekday">M</div>
@@ -865,19 +1021,15 @@
                 <div class="calendar-weekday">F</div>
                 <div class="calendar-weekday">S</div>
             </div>
-            
             <div class="calendar-days" id="calendar-days"></div>
-            
             <button class="calendar-confirm-btn" id="calendar-confirm">Confirm</button>
         </div>
     </div>
 
     <script type="module">
-        // Import Firebase
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, child, query, orderByKey } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD-h44vi3qDSh0JMwkNFTQfvnC7c-2TpVA",
             authDomain: "fitness-tracker-a10c9.firebaseapp.com",
@@ -889,16 +1041,9 @@
             measurementId: "G-LF89PZ4605"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        // Sync status management (no-op since UI was removed)
-        function updateSyncStatus(status, message) {
-            // Status display removed from UI
-        }
-
-        // Global state
         let currentWeek = getWeekNumber(new Date());
         let currentYear = new Date().getFullYear();
         let weekData = { gym: 0, class: 0, tennis: 0 };
@@ -908,548 +1053,349 @@
         let statsYear = currentYear;
         let currentPeriod = 'week';
 
+        // Goals per activity (used for progress bars)
+        const GOALS = { gym: 4, class: 2, tennis: 1 };
+
         function getWeekNumber(date) {
-            // Week 1 starts on Monday, January 5, 2026
-            const year = date.getFullYear();
-            const week1Start = new Date(2026, 0, 5); // January 5, 2026 (Monday)
-            
-            if (year < 2026) {
-                return 1;
-            }
-            
-            // If date is before Week 1 start, it's part of previous year's last week
-            if (date < week1Start) {
-                return 52;
-            }
-            
-            // Calculate days since Week 1 start
-            const daysSinceWeek1 = Math.floor((date - week1Start) / 86400000);
-            
-            // Calculate week number (weeks start on Monday)
-            const weekNum = Math.floor(daysSinceWeek1 / 7) + 1;
-            
-            // Cap at 52 weeks
+            const week1Start = new Date(2026, 0, 5);
+            if (date.getFullYear() < 2026) return 1;
+            if (date < week1Start) return 52;
+            const daysSince = Math.floor((date - week1Start) / 86400000);
+            const weekNum = Math.floor(daysSince / 7) + 1;
             return weekNum > 52 ? 52 : weekNum;
         }
 
         function getWeekDates(year, week) {
-            // Week 1 starts on Monday, January 5, 2026
             const week1Start = new Date(2026, 0, 5);
-            
-            // Calculate the Monday of the requested week
             const daysOffset = (week - 1) * 7;
             const weekStart = new Date(week1Start);
             weekStart.setDate(week1Start.getDate() + daysOffset);
-            
-            // Week ends on Sunday (6 days after Monday)
             const weekEnd = new Date(weekStart);
             weekEnd.setDate(weekStart.getDate() + 6);
-            
             return { start: weekStart, end: weekEnd };
         }
 
         function formatWeekDates(year, week) {
             const dates = getWeekDates(year, week);
-            const options = { month: 'short', day: 'numeric' };
-            return `${dates.start.toLocaleDateString('en-US', options)} - ${dates.end.toLocaleDateString('en-US', options)}`;
+            const opts = { month: 'short', day: 'numeric' };
+            return `${dates.start.toLocaleDateString('en-US', opts)} – ${dates.end.toLocaleDateString('en-US', opts)}`;
         }
 
-        function getWeekTarget(week) {
-            return 4.5;
+        function getWeekTarget() { return 4.5; }
+
+        function updateWeekDisplay() {
+            const el = document.getElementById('week-display');
+            const dateRange = formatWeekDates(currentYear, currentWeek);
+            el.innerHTML = `<div class="week-display-label">Week ${currentWeek}</div><div class="week-display-range">${dateRange}</div>`;
         }
 
         function updatePeriodDisplay() {
-            const display = document.getElementById('period-display');
-            
+            const el = document.getElementById('period-display');
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
             if (currentPeriod === 'week') {
                 const dateRange = formatWeekDates(statsYear, statsWeek);
-                display.textContent = `Week ${statsWeek}: ${dateRange}`;
+                el.innerHTML = `<div class="week-display-label">Week ${statsWeek}</div><div class="week-display-range">${dateRange}</div>`;
             } else if (currentPeriod === 'month') {
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-                display.textContent = `${monthNames[statsMonth]} ${statsYear}`;
-            } else if (currentPeriod === 'year') {
-                display.textContent = `${statsYear}`;
+                el.innerHTML = `<div class="week-display-label">${statsYear}</div><div class="week-display-range">${monthNames[statsMonth]}</div>`;
+            } else {
+                el.innerHTML = `<div class="week-display-label">Year</div><div class="week-display-range">${statsYear}</div>`;
             }
-            
-            // Re-attach event listener for stats calendar
             setupStatsCalendar();
         }
 
-        async function loadWeekData() {
-            updateSyncStatus('syncing', 'Loading...');
-            
-            const key = `week-${currentYear}-${currentWeek}`;
-            const dbRef = ref(database);
-            
-            try {
-                const snapshot = await get(child(dbRef, `fitness-data/${key}`));
-                
-                if (snapshot.exists()) {
-                    weekData = snapshot.val();
-                } else {
-                    weekData = { gym: 0, class: 0, tennis: 0 };
+        function updateCounters() {
+            ['gym', 'class', 'tennis'].forEach(act => {
+                const el = document.getElementById(`${act}-counter`);
+                const val = weekData[act];
+                el.textContent = val;
+                el.classList.toggle('zero', val === 0);
+
+                // Update progress bar
+                const bar = document.getElementById(`${act}-bar`);
+                if (bar) {
+                    const pct = Math.min((val / GOALS[act]) * 100, 100);
+                    bar.style.width = pct + '%';
                 }
-                
-                updateCounters();
-                updateWeekDisplay();
-                updateSyncStatus('synced', 'Loaded from cloud');
-            } catch (error) {
-                console.error('Load error:', error);
+            });
+        }
+
+        async function loadWeekData() {
+            const key = `week-${currentYear}-${currentWeek}`;
+            try {
+                const snapshot = await get(child(ref(database), `fitness-data/${key}`));
+                weekData = snapshot.exists() ? snapshot.val() : { gym: 0, class: 0, tennis: 0 };
+            } catch {
                 weekData = { gym: 0, class: 0, tennis: 0 };
-                updateCounters();
-                updateWeekDisplay();
-                updateSyncStatus('error', 'Load failed');
             }
+            updateCounters();
+            updateWeekDisplay();
         }
 
         async function saveWeekData() {
-            updateSyncStatus('syncing', 'Saving...');
-            
             const key = `week-${currentYear}-${currentWeek}`;
-            
+            const btn = document.getElementById('save-btn');
             try {
                 await set(ref(database, `fitness-data/${key}`), weekData);
-                updateSyncStatus('synced', 'Saved to cloud');
-                
-                // Visual feedback
-                const btn = document.getElementById('save-btn');
-                btn.textContent = '✓ Saved!';
+                btn.textContent = '✓  Saved!';
                 btn.classList.add('success');
-                
                 setTimeout(() => {
-                    btn.textContent = '💾 Save Week';
+                    btn.innerHTML = '✦ &nbsp; Save Week';
                     btn.classList.remove('success');
-                }, 1500);
-            } catch (error) {
-                console.error('Save error:', error);
-                updateSyncStatus('error', 'Save failed');
+                }, 1800);
+            } catch (e) {
+                console.error(e);
             }
         }
 
         async function saveWeekDataSilently() {
             const key = `week-${currentYear}-${currentWeek}`;
-            try {
-                await set(ref(database, `fitness-data/${key}`), weekData);
-            } catch (error) {
-                console.error('Silent save error:', error);
-            }
+            try { await set(ref(database, `fitness-data/${key}`), weekData); } catch {}
         }
 
-        function updateCounters() {
-            document.getElementById('gym-counter').textContent = weekData.gym;
-            document.getElementById('class-counter').textContent = weekData.class;
-            document.getElementById('tennis-counter').textContent = weekData.tennis;
-        }
-
-        function updateWeekDisplay() {
-            const dateRange = formatWeekDates(currentYear, currentWeek);
-            document.getElementById('week-display').textContent = `Week ${currentWeek}: ${dateRange}`;
-        }
-
-        async function initializeHistoricalData() {
-            // Check if data already exists
-            const dbRef = ref(database);
-            const snapshot = await get(child(dbRef, 'fitness-data'));
-            
-            if (snapshot.exists()) {
-                return; // Data already initialized
-            }
-
-            updateSyncStatus('syncing', 'Setting up...');
-
-            // Initialize with sample data
-            const sampleData = [
-                { year: 2026, week: 1, gym: 2, class: 1, tennis: 0 },
-                { year: 2026, week: 2, gym: 1, class: 2, tennis: 0 },
-                { year: 2026, week: 3, gym: 2, class: 1, tennis: 1 },
-                { year: 2026, week: 4, gym: 3, class: 1, tennis: 0 },
-                { year: 2026, week: 5, gym: 2, class: 2, tennis: 1 },
-            ];
-
-            for (const data of sampleData) {
-                const key = `week-${data.year}-${data.week}`;
-                await set(ref(database, `fitness-data/${key}`), {
-                    gym: data.gym,
-                    class: data.class,
-                    tennis: data.tennis
-                });
-            }
-        }
-
-        // Event listeners
+        // ── Tab switching ──
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
                 tab.classList.add('active');
                 document.getElementById(`${tab.dataset.view}-view`).classList.add('active');
-                
-                if (tab.dataset.view === 'stats') {
-                    updateStats();
-                }
+                if (tab.dataset.view === 'stats') updateStats();
             });
         });
 
+        // ── Counters ──
         document.querySelectorAll('.counter-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const activity = btn.dataset.activity;
+                const act = btn.dataset.activity;
                 const action = btn.dataset.action;
-                
-                if (action === 'inc') {
-                    weekData[activity]++;
-                } else if (action === 'dec' && weekData[activity] > 0) {
-                    weekData[activity]--;
-                }
-                
+                if (action === 'inc') weekData[act]++;
+                else if (action === 'dec' && weekData[act] > 0) weekData[act]--;
                 updateCounters();
             });
         });
 
+        // ── Week navigation ──
         document.getElementById('prev-week').addEventListener('click', async () => {
             await saveWeekDataSilently();
             currentWeek--;
-            if (currentWeek < 1) {
-                currentWeek = 52;
-                currentYear--;
-            }
+            if (currentWeek < 1) { currentWeek = 52; currentYear--; }
             await loadWeekData();
         });
 
         document.getElementById('next-week').addEventListener('click', async () => {
             await saveWeekDataSilently();
             currentWeek++;
-            if (currentWeek > 52) {
-                currentWeek = 1;
-                currentYear++;
-            }
+            if (currentWeek > 52) { currentWeek = 1; currentYear++; }
             await loadWeekData();
         });
 
         document.getElementById('save-btn').addEventListener('click', saveWeekData);
 
-        // Custom Calendar functionality
-        const calendarModal = document.getElementById('calendar-modal');
-        const calendarDays = document.getElementById('calendar-days');
-        const calendarMonthYear = document.getElementById('calendar-month-year');
-        const calendarPrevMonth = document.getElementById('calendar-prev-month');
-        const calendarNextMonth = document.getElementById('calendar-next-month');
-        const calendarConfirm = document.getElementById('calendar-confirm');
-        
-        let calendarCurrentMonth = new Date().getMonth();
-        let calendarCurrentYear = new Date().getFullYear();
-        let calendarSelectedDate = null;
-        let calendarMode = 'tracker'; // 'tracker' or 'stats'
-
-        const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-
-        function renderCalendar() {
-            const firstDay = new Date(calendarCurrentYear, calendarCurrentMonth, 1);
-            const lastDay = new Date(calendarCurrentYear, calendarCurrentMonth + 1, 0);
-            const prevLastDay = new Date(calendarCurrentYear, calendarCurrentMonth, 0);
-            
-            const firstDayIndex = firstDay.getDay();
-            const lastDayDate = lastDay.getDate();
-            const prevLastDayDate = prevLastDay.getDate();
-            
-            calendarMonthYear.textContent = `${monthNames[calendarCurrentMonth]} ${calendarCurrentYear}`;
-            
-            let days = '';
-            
-            // Previous month days
-            for (let x = firstDayIndex; x > 0; x--) {
-                const day = prevLastDayDate - x + 1;
-                days += `<button class="calendar-day calendar-day-other-month" data-date="${calendarCurrentYear}-${calendarCurrentMonth}-${day}">${day}</button>`;
-            }
-            
-            // Current month days
-            const today = new Date();
-            for (let i = 1; i <= lastDayDate; i++) {
-                const date = new Date(calendarCurrentYear, calendarCurrentMonth, i);
-                const dateStr = `${calendarCurrentYear}-${calendarCurrentMonth + 1}-${i}`;
-                const isToday = date.toDateString() === today.toDateString();
-                const isSelected = calendarSelectedDate && 
-                    date.toDateString() === calendarSelectedDate.toDateString();
-                
-                let classes = 'calendar-day';
-                if (isToday) classes += ' calendar-day-today';
-                if (isSelected) classes += ' calendar-day-selected';
-                
-                days += `<button class="${classes}" data-date="${dateStr}">${i}</button>`;
-            }
-            
-            // Next month days
-            const remainingDays = 42 - (firstDayIndex + lastDayDate);
-            for (let j = 1; j <= remainingDays; j++) {
-                const nextMonth = calendarCurrentMonth + 1;
-                const nextYear = nextMonth > 11 ? calendarCurrentYear + 1 : calendarCurrentYear;
-                const month = nextMonth > 11 ? 0 : nextMonth;
-                days += `<button class="calendar-day calendar-day-other-month" data-date="${nextYear}-${month + 1}-${j}">${j}</button>`;
-            }
-            
-            calendarDays.innerHTML = days;
-            
-            // Add click listeners to day buttons
-            calendarDays.querySelectorAll('.calendar-day').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const [year, month, day] = btn.dataset.date.split('-').map(Number);
-                    calendarSelectedDate = new Date(year, month - 1, day);
-                    renderCalendar();
-                });
-            });
-        }
-
-        function openCalendar(mode, initialDate) {
-            calendarMode = mode;
-            calendarSelectedDate = initialDate || new Date();
-            calendarCurrentMonth = calendarSelectedDate.getMonth();
-            calendarCurrentYear = calendarSelectedDate.getFullYear();
-            renderCalendar();
-            calendarModal.classList.add('active');
-        }
-
-        function closeCalendar() {
-            calendarModal.classList.remove('active');
-        }
-
-        // Tracker tab - open calendar
-        document.getElementById('week-display').addEventListener('click', () => {
-            const dates = getWeekDates(currentYear, currentWeek);
-            openCalendar('tracker', dates.start);
-        });
-
-        // Stats tab - open calendar
-        function setupStatsCalendar() {
-            const periodDisplay = document.getElementById('period-display');
-            if (!periodDisplay) return;
-            
-            const clickHandler = (e) => {
-                e.stopPropagation();
-                let initialDate;
-                if (currentPeriod === 'week') {
-                    const dates = getWeekDates(statsYear, statsWeek);
-                    initialDate = dates.start;
-                } else if (currentPeriod === 'month') {
-                    initialDate = new Date(statsYear, statsMonth, 1);
-                } else {
-                    initialDate = new Date(statsYear, 0, 1);
-                }
-                openCalendar('stats', initialDate);
-            };
-            
-            periodDisplay.removeEventListener('click', clickHandler);
-            periodDisplay.addEventListener('click', clickHandler);
-        }
-
-        // Calendar navigation
-        calendarPrevMonth.addEventListener('click', (e) => {
-            e.stopPropagation();
-            calendarCurrentMonth--;
-            if (calendarCurrentMonth < 0) {
-                calendarCurrentMonth = 11;
-                calendarCurrentYear--;
-            }
-            renderCalendar();
-        });
-
-        calendarNextMonth.addEventListener('click', (e) => {
-            e.stopPropagation();
-            calendarCurrentMonth++;
-            if (calendarCurrentMonth > 11) {
-                calendarCurrentMonth = 0;
-                calendarCurrentYear++;
-            }
-            renderCalendar();
-        });
-
-        // Close calendar when clicking outside
-        calendarModal.addEventListener('click', (e) => {
-            if (e.target === calendarModal) {
-                closeCalendar();
-            }
-        });
-
-        // Confirm button
-        calendarConfirm.addEventListener('click', async () => {
-            if (!calendarSelectedDate) return;
-            
-            if (calendarMode === 'tracker') {
-                await saveWeekDataSilently();
-                currentYear = calendarSelectedDate.getFullYear();
-                currentWeek = getWeekNumber(calendarSelectedDate);
-                await loadWeekData();
-            } else if (calendarMode === 'stats') {
-                if (currentPeriod === 'week') {
-                    statsWeek = getWeekNumber(calendarSelectedDate);
-                    statsYear = calendarSelectedDate.getFullYear();
-                } else if (currentPeriod === 'month') {
-                    statsMonth = calendarSelectedDate.getMonth();
-                    statsYear = calendarSelectedDate.getFullYear();
-                } else if (currentPeriod === 'year') {
-                    statsYear = calendarSelectedDate.getFullYear();
-                }
-                updateStats();
-            }
-            
-            closeCalendar();
-        });
-
+        // ── Period selector ──
         document.querySelectorAll('.period-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentPeriod = btn.dataset.period;
-                
-                if (currentPeriod === 'week') {
-                    statsWeek = getWeekNumber(new Date());
-                    statsYear = new Date().getFullYear();
-                } else if (currentPeriod === 'month') {
-                    statsMonth = new Date().getMonth();
-                    statsYear = new Date().getFullYear();
-                } else if (currentPeriod === 'year') {
-                    statsYear = new Date().getFullYear();
-                }
-                
+                const now = new Date();
+                if (currentPeriod === 'week') { statsWeek = getWeekNumber(now); statsYear = now.getFullYear(); }
+                else if (currentPeriod === 'month') { statsMonth = now.getMonth(); statsYear = now.getFullYear(); }
+                else { statsYear = now.getFullYear(); }
                 updateStats();
             });
         });
 
         document.getElementById('prev-period').addEventListener('click', () => {
-            if (currentPeriod === 'week') {
-                statsWeek--;
-                if (statsWeek < 1) {
-                    statsWeek = 52;
-                    statsYear--;
-                }
-            } else if (currentPeriod === 'month') {
-                statsMonth--;
-                if (statsMonth < 0) {
-                    statsMonth = 11;
-                    statsYear--;
-                }
-            } else if (currentPeriod === 'year') {
-                statsYear--;
-            }
+            if (currentPeriod === 'week') { statsWeek--; if (statsWeek < 1) { statsWeek = 52; statsYear--; } }
+            else if (currentPeriod === 'month') { statsMonth--; if (statsMonth < 0) { statsMonth = 11; statsYear--; } }
+            else statsYear--;
             updateStats();
         });
 
         document.getElementById('next-period').addEventListener('click', () => {
-            if (currentPeriod === 'week') {
-                statsWeek++;
-                if (statsWeek > 52) {
-                    statsWeek = 1;
-                    statsYear++;
-                }
-            } else if (currentPeriod === 'month') {
-                statsMonth++;
-                if (statsMonth > 11) {
-                    statsMonth = 0;
-                    statsYear++;
-                }
-            } else if (currentPeriod === 'year') {
-                statsYear++;
-            }
+            if (currentPeriod === 'week') { statsWeek++; if (statsWeek > 52) { statsWeek = 1; statsYear++; } }
+            else if (currentPeriod === 'month') { statsMonth++; if (statsMonth > 11) { statsMonth = 0; statsYear++; } }
+            else statsYear++;
             updateStats();
         });
 
+        // ── Calendar ──
+        const calModal = document.getElementById('calendar-modal');
+        let calMonth = new Date().getMonth();
+        let calYear  = new Date().getFullYear();
+        let calSelected = null;
+        let calMode = 'tracker';
+
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+        function renderCalendar() {
+            const firstDay  = new Date(calYear, calMonth, 1).getDay();
+            const lastDate  = new Date(calYear, calMonth + 1, 0).getDate();
+            const prevLast  = new Date(calYear, calMonth, 0).getDate();
+            const today     = new Date();
+
+            document.getElementById('calendar-month-year').textContent = `${monthNames[calMonth]} ${calYear}`;
+
+            let html = '';
+
+            for (let x = firstDay; x > 0; x--) {
+                html += `<button class="calendar-day calendar-day-other-month">${prevLast - x + 1}</button>`;
+            }
+
+            for (let i = 1; i <= lastDate; i++) {
+                const d = new Date(calYear, calMonth, i);
+                const isToday    = d.toDateString() === today.toDateString();
+                const isSelected = calSelected && d.toDateString() === calSelected.toDateString();
+                let cls = 'calendar-day';
+                if (isToday)    cls += ' calendar-day-today';
+                if (isSelected) cls += ' calendar-day-selected';
+                html += `<button class="${cls}" data-date="${calYear}-${calMonth+1}-${i}">${i}</button>`;
+            }
+
+            const remaining = 42 - (firstDay + lastDate);
+            for (let j = 1; j <= remaining; j++) {
+                html += `<button class="calendar-day calendar-day-other-month">${j}</button>`;
+            }
+
+            const container = document.getElementById('calendar-days');
+            container.innerHTML = html;
+            container.querySelectorAll('.calendar-day:not(.calendar-day-other-month)').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const [y, m, d] = btn.dataset.date.split('-').map(Number);
+                    calSelected = new Date(y, m - 1, d);
+                    renderCalendar();
+                });
+            });
+        }
+
+        function openCalendar(mode, date) {
+            calMode = mode;
+            calSelected = date || new Date();
+            calMonth = calSelected.getMonth();
+            calYear  = calSelected.getFullYear();
+            renderCalendar();
+            calModal.classList.add('active');
+        }
+
+        function closeCalendar() { calModal.classList.remove('active'); }
+
+        document.getElementById('week-display').addEventListener('click', () => {
+            const dates = getWeekDates(currentYear, currentWeek);
+            openCalendar('tracker', dates.start);
+        });
+
+        function setupStatsCalendar() {
+            const el = document.getElementById('period-display');
+            el.onclick = e => {
+                e.stopPropagation();
+                let d;
+                if (currentPeriod === 'week') d = getWeekDates(statsYear, statsWeek).start;
+                else if (currentPeriod === 'month') d = new Date(statsYear, statsMonth, 1);
+                else d = new Date(statsYear, 0, 1);
+                openCalendar('stats', d);
+            };
+        }
+
+        document.getElementById('calendar-prev-month').addEventListener('click', e => {
+            e.stopPropagation();
+            calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
+            renderCalendar();
+        });
+
+        document.getElementById('calendar-next-month').addEventListener('click', e => {
+            e.stopPropagation();
+            calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
+            renderCalendar();
+        });
+
+        calModal.addEventListener('click', e => { if (e.target === calModal) closeCalendar(); });
+
+        document.getElementById('calendar-confirm').addEventListener('click', async () => {
+            if (!calSelected) return;
+            if (calMode === 'tracker') {
+                await saveWeekDataSilently();
+                currentYear = calSelected.getFullYear();
+                currentWeek = getWeekNumber(calSelected);
+                await loadWeekData();
+            } else {
+                if (currentPeriod === 'week') { statsWeek = getWeekNumber(calSelected); statsYear = calSelected.getFullYear(); }
+                else if (currentPeriod === 'month') { statsMonth = calSelected.getMonth(); statsYear = calSelected.getFullYear(); }
+                else statsYear = calSelected.getFullYear();
+                updateStats();
+            }
+            closeCalendar();
+        });
+
+        // ── Stats ──
         async function updateStats() {
             updatePeriodDisplay();
             const stats = await calculateStats(currentPeriod);
-            
-            const maxValue = Math.max(stats.gym, stats.class, stats.tennis, 1);
-            const chart = document.getElementById('activity-chart');
-            const bars = chart.querySelectorAll('.bar');
-            
-            bars[0].style.height = `${(stats.gym / maxValue) * 100}%`;
+            const maxVal = Math.max(stats.gym, stats.class, stats.tennis, 1);
+            const chart  = document.getElementById('activity-chart');
+            const bars   = chart.querySelectorAll('.bar');
+            const maxH   = 120;
+
+            bars[0].style.height = `${Math.max((stats.gym / maxVal) * maxH, 16)}px`;
             bars[0].querySelector('.bar-value').textContent = stats.gym;
-            
-            bars[1].style.height = `${(stats.class / maxValue) * 100}%`;
+            bars[1].style.height = `${Math.max((stats.class / maxVal) * maxH, 16)}px`;
             bars[1].querySelector('.bar-value').textContent = stats.class;
-            
-            bars[2].style.height = `${(stats.tennis / maxValue) * 100}%`;
+            bars[2].style.height = `${Math.max((stats.tennis / maxVal) * maxH, 16)}px`;
             bars[2].querySelector('.bar-value').textContent = stats.tennis;
-            
+
             const total = stats.gym + stats.class + stats.tennis;
+            const pct   = stats.target > 0 ? Math.round((total / stats.target) * 100) : 0;
+
             document.getElementById('total-activities').textContent = total;
-            
-            const targetProgress = stats.target > 0 ? Math.round((total / stats.target) * 100) : 0;
-            document.getElementById('target-progress').textContent = `${targetProgress}%`;
-            
-            document.getElementById('overall-percentage').textContent = `${targetProgress}%`;
-            document.getElementById('overall-progress-bar').style.width = `${Math.min(targetProgress, 100)}%`;
+            document.getElementById('target-progress').textContent  = `${pct}%`;
+            document.getElementById('overall-percentage').textContent = `${pct}%`;
+            document.getElementById('overall-progress-bar').style.width = `${Math.min(pct, 100)}%`;
             document.getElementById('overall-current').textContent = `${total} activities`;
-            document.getElementById('overall-target').textContent = `Target: ${stats.target.toFixed(1)}`;
-            
+            document.getElementById('overall-target').textContent  = `Target: ${stats.target.toFixed(1)}`;
+
             await updateTimeline();
         }
 
         async function calculateStats(period) {
             let stats = { gym: 0, class: 0, tennis: 0, target: 0 };
-            
             try {
-                const dbRef = ref(database);
-                const snapshot = await get(child(dbRef, 'fitness-data'));
-                
+                const snapshot = await get(child(ref(database), 'fitness-data'));
                 if (snapshot.exists()) {
-                    const allData = snapshot.val();
-                    
-                    for (const [key, data] of Object.entries(allData)) {
-                        const [_, year, week] = key.split('-');
-                        const weekNum = parseInt(week);
-                        const yearNum = parseInt(year);
-                        
+                    for (const [key, data] of Object.entries(snapshot.val())) {
+                        const [, year, week] = key.split('-');
+                        const wn = parseInt(week), yn = parseInt(year);
                         let include = false;
-                        if (period === 'week') {
-                            include = weekNum === statsWeek && yearNum === statsYear;
-                        } else if (period === 'month') {
-                            const dates = getWeekDates(yearNum, weekNum);
-                            include = dates.start.getMonth() === statsMonth && yearNum === statsYear;
-                        } else if (period === 'year') {
-                            include = yearNum === statsYear;
-                        }
-                        
+                        if (period === 'week') include = wn === statsWeek && yn === statsYear;
+                        else if (period === 'month') {
+                            const dates = getWeekDates(yn, wn);
+                            include = dates.start.getMonth() === statsMonth && yn === statsYear;
+                        } else include = yn === statsYear;
                         if (include) {
-                            stats.gym += data.gym || 0;
+                            stats.gym   += data.gym   || 0;
                             stats.class += data.class || 0;
                             stats.tennis += data.tennis || 0;
-                            stats.target += getWeekTarget(weekNum);
+                            stats.target += getWeekTarget();
                         }
                     }
                 }
-            } catch (error) {
-                console.error('Calculate stats error:', error);
-            }
-            
+            } catch {}
             return stats;
         }
 
         async function updateTimeline() {
             const timeline = document.getElementById('timeline');
             timeline.innerHTML = '';
-            
             try {
-                const dbRef = ref(database);
-                const snapshot = await get(child(dbRef, 'fitness-data'));
-                
+                const snapshot = await get(child(ref(database), 'fitness-data'));
                 if (!snapshot.exists()) {
-                    timeline.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📊</div>
-                            <div class="empty-state-text">No activity recorded yet</div>
-                        </div>
-                    `;
+                    timeline.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✦</div><div class="empty-state-text">No activity recorded yet</div></div>`;
                     return;
                 }
-                
-                const allData = snapshot.val();
-                const sortedKeys = Object.keys(allData).sort().reverse().slice(0, 3);
-                
-                for (const key of sortedKeys) {
-                    const [_, year, week] = key.split('-');
-                    const data = allData[key];
-                    const total = data.gym + data.class + data.tennis;
-                    
+                const sorted = Object.keys(snapshot.val()).sort().reverse().slice(0, 3);
+                for (const key of sorted) {
+                    const [, year, week] = key.split('-');
+                    const data  = snapshot.val()[key];
+                    const total = (data.gym || 0) + (data.class || 0) + (data.tennis || 0);
                     if (total > 0) {
                         const dateRange = formatWeekDates(parseInt(year), parseInt(week));
                         const item = document.createElement('div');
@@ -1461,29 +1407,38 @@
                                 <div class="timeline-stat">🏃 <strong>${data.class}</strong></div>
                                 <div class="timeline-stat">🎾 <strong>${data.tennis}</strong></div>
                                 <div class="timeline-stat">Total: <strong>${total}</strong></div>
-                            </div>
-                        `;
+                            </div>`;
                         timeline.appendChild(item);
                     }
                 }
-            } catch (error) {
-                console.error('Timeline error:', error);
+                if (!timeline.children.length) {
+                    timeline.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✦</div><div class="empty-state-text">No activity recorded yet</div></div>`;
+                }
+            } catch {}
+        }
+
+        async function initializeHistoricalData() {
+            const snapshot = await get(child(ref(database), 'fitness-data'));
+            if (snapshot.exists()) return;
+            const sample = [
+                { year:2026, week:1, gym:2, class:1, tennis:0 },
+                { year:2026, week:2, gym:1, class:2, tennis:0 },
+                { year:2026, week:3, gym:2, class:1, tennis:1 },
+                { year:2026, week:4, gym:3, class:1, tennis:0 },
+                { year:2026, week:5, gym:2, class:2, tennis:1 },
+            ];
+            for (const d of sample) {
+                await set(ref(database, `fitness-data/week-${d.year}-${d.week}`), { gym:d.gym, class:d.class, tennis:d.tennis });
             }
         }
 
-        // Initialize
         async function init() {
             try {
-                updateSyncStatus('syncing', 'Connecting...');
                 await initializeHistoricalData();
                 await loadWeekData();
-                updateSyncStatus('synced', 'Connected to cloud');
-            } catch (error) {
-                console.error('Initialization error:', error);
-                updateSyncStatus('error', 'Connection failed');
-            }
+            } catch (e) { console.error(e); }
         }
-        
+
         init();
     </script>
 </body>
