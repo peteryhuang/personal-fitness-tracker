@@ -851,7 +851,7 @@
             .stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
-    <link rel="stylesheet" href="life.css?v=3">
+    <link rel="stylesheet" href="life.css?v=6">
 </head>
 <body>
     <div class="container">
@@ -923,7 +923,7 @@
                     </div>
                 </div>
 
-                <button class="save-btn" id="save-btn">✦ &nbsp; Save Week</button>
+                <p class="life-muted">Changes save automatically.</p>
             </div>
         </div>
 
@@ -1007,7 +1007,7 @@
         </section>
         <section id="life-section" hidden></section>
     </div>
-    <nav class="bottom-nav" aria-label="Main sections"><button id="nav-fitness" aria-pressed="true">↗ &nbsp; Fitness</button><button id="nav-life" aria-pressed="false">✦ &nbsp; People & Experiences</button></nav>
+    <nav class="bottom-nav" aria-label="Main sections"><button id="nav-fitness" aria-pressed="true">↗ &nbsp; Fitness</button><button id="nav-life" aria-pressed="false">✦ &nbsp; Interactions</button></nav>
 
     <!-- ── Calendar Modal ── -->
     <div class="calendar-modal" id="calendar-modal">
@@ -1034,7 +1034,7 @@
     <script src="life.js" defer></script>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, child } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { getDatabase, ref, set, get, child, runTransaction } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyD-h44vi3qDSh0JMwkNFTQfvnC7c-2TpVA",
@@ -1054,6 +1054,7 @@
         let currentYear = new Date().getFullYear();
         let weekData = { gym: 0, class: 0, tennis: 0 };
         let fitnessLoaded = false;
+        let fitnessBusy = false;
 
         let statsWeek = currentWeek;
         let statsMonth = new Date().getMonth();
@@ -1128,39 +1129,26 @@
 
         async function loadWeekData() {
             fitnessLoaded = false;
+            fitnessBusy = true;
+            lockFitness();
             const key = `week-${currentYear}-${currentWeek}`;
             try {
                 const snapshot = await get(child(ref(database), `fitness-data/${key}`));
-                weekData = snapshot.exists() ? snapshot.val() : { gym: 0, class: 0, tennis: 0 };
+                weekData = { gym: 0, class: 0, tennis: 0, ...(snapshot.exists() ? snapshot.val() : {}) };
                 fitnessLoaded = true;
             } catch {
                 weekData = { gym: 0, class: 0, tennis: 0 };
             }
+            fitnessBusy = false;
+            lockFitness();
+            if (!fitnessLoaded) window.ritualToast("Could not load fitness data. Reload to retry.", null, true);
             updateCounters();
             updateWeekDisplay();
         }
 
-        async function saveWeekData() {
-            if (!fitnessLoaded) { alert("Fitness data has not loaded. Reload before saving."); return; }
-            const key = `week-${currentYear}-${currentWeek}`;
-            const btn = document.getElementById('save-btn');
-            try {
-                await set(ref(database, `fitness-data/${key}`), weekData);
-                btn.textContent = '✓  Saved!';
-                btn.classList.add('success');
-                setTimeout(() => {
-                    btn.innerHTML = '✦ &nbsp; Save Week';
-                    btn.classList.remove('success');
-                }, 1800);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-
-        async function saveWeekDataSilently() {
-            if (!fitnessLoaded) return;
-            const key = `week-${currentYear}-${currentWeek}`;
-            try { await set(ref(database, `fitness-data/${key}`), weekData); } catch {}
+        function lockFitness() {
+            document.querySelectorAll('.counter-btn').forEach(b => b.disabled = fitnessBusy || !fitnessLoaded);
+            ['prev-week','next-week','calendar-confirm'].forEach(id => document.getElementById(id).disabled = fitnessBusy);
         }
 
         // ── Tab switching ──
@@ -1174,38 +1162,55 @@
             });
         });
 
-        // ── Counters ──
+        // Save each tap atomically, without replacing other activities or weeks.
         document.querySelectorAll('.counter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
+                if (!fitnessLoaded || fitnessBusy) return;
                 const act = btn.dataset.activity;
-                const action = btn.dataset.action;
-                if (action === 'inc') weekData[act]++;
-                else if (action === 'dec' && weekData[act] > 0) weekData[act]--;
-                updateCounters();
+                const delta = btn.dataset.action === 'inc' ? 1 : -1;
+                if (delta < 0 && weekData[act] === 0) return;
+                const key = `week-${currentYear}-${currentWeek}`;
+                fitnessBusy = true;
+                lockFitness();
+                window.ritualToast('Saving…', null, true);
+                try {
+                    const result = await runTransaction(ref(database, `fitness-data/${key}/${act}`), value => Math.max(0, (Number(value) || 0) + delta), {applyLocally:false});
+                    if (!result.committed) throw new Error('Save not committed');
+                    weekData[act] = result.snapshot.val();
+                    updateCounters();
+                    window.ritualToast('Saved to cloud');
+                    if (document.getElementById('stats-view').classList.contains('active')) updateStats();
+                } catch (error) {
+                    window.ritualToast('Could not save. Reload before trying again.', null, true);
+                    fitnessLoaded = false;
+                } finally {
+                    fitnessBusy = false;
+                    lockFitness();
+                }
             });
         });
 
         // ── Week navigation ──
         document.getElementById('prev-week').addEventListener('click', async () => {
-            await saveWeekDataSilently();
+            if (fitnessBusy) return;
             currentWeek--;
             if (currentWeek < 1) { currentWeek = 52; currentYear--; }
             await loadWeekData();
         });
 
         document.getElementById('next-week').addEventListener('click', async () => {
-            await saveWeekDataSilently();
+            if (fitnessBusy) return;
             currentWeek++;
             if (currentWeek > 52) { currentWeek = 1; currentYear++; }
             await loadWeekData();
         });
 
-        document.getElementById('save-btn').addEventListener('click', saveWeekData);
+
 
         // ── Period selector ──
-        document.querySelectorAll('.period-btn').forEach(btn => {
+        document.querySelectorAll('#fitness-section .period-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('#fitness-section .period-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentPeriod = btn.dataset.period;
                 const now = new Date();
@@ -1325,7 +1330,7 @@
         document.getElementById('calendar-confirm').addEventListener('click', async () => {
             if (!calSelected) return;
             if (calMode === 'tracker') {
-                await saveWeekDataSilently();
+                if (fitnessBusy) return;
                 currentYear = calSelected.getFullYear();
                 currentWeek = getWeekNumber(calSelected);
                 await loadWeekData();

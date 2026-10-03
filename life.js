@@ -1,3 +1,10 @@
+let ritualToastTimer;
+window.ritualToast = (message, action = null, persistent = false) => {
+  let toast=document.getElementById('ritual-toast');
+  if(!toast) {toast=document.createElement('div');toast.id='ritual-toast';toast.className='ritual-toast';toast.setAttribute('role','status');toast.setAttribute('aria-live','polite');document.body.append(toast);}
+  clearTimeout(ritualToastTimer);toast.replaceChildren(document.createTextNode(message));toast.hidden=false;
+  if(!persistent) ritualToastTimer=setTimeout(()=>toast.hidden=true,2500);
+};
 (() => {
   const section = document.getElementById('life-section');
   const databaseUrl='https://fitness-tracker-a10c9-default-rtdb.firebaseio.com/life-data';
@@ -46,7 +53,7 @@
       else if('wasDisabled' in el.dataset) {el.disabled=el.dataset.wasDisabled==='true';delete el.dataset.wasDisabled;}
     });
   }
-  function status(text) {document.getElementById('life-status').textContent=text;}
+  function status(text) {window.ritualToast(text, null, /Could not|Saving/.test(text));}
   function detailsEditor(type, items) {
     const label=type==='people'?'Interaction':'Experience';
     return `<form class="life-note-form life-form"><label>Choose ${label.toLowerCase()}<select name="entry">${items.map((e,i)=>`<option value="${esc(e.id)}">${label} ${i+1}${e.title?' · '+esc(e.title):''}</option>`).join('')}</select></label><label>${type==='people'?'Who did you see?':'What did you try?'}<input name="title" maxlength="160" placeholder="Optional" value="${esc(items[0].title||'')}"></label><label>A note<textarea name="notes" rows="2" maxlength="2000" placeholder="Anything to remember (optional)">${esc(items[0].notes||'')}</textarea></label><button class="life-button" type="submit">Save details</button></form>`;
@@ -59,17 +66,25 @@
     const selected=entries.filter(e=>months.includes(e.month));
     const total=type=>selected.filter(e=>e.type===type).length;
     const title=period==='month'?`${monthName(month)} ${year}`:period==='quarter'?`Q${Math.floor(month/3)+1} · ${year}`:`${year}`;
-    section.innerHTML=`<p class="life-intro">Make room for your people.<br>Try something for the first time.</p>
-      <div class="tabs" aria-label="People and experiences views">${['tracker','stats'].map(v=>`<button class="life-view-tab ${lifeView===v?'active':''}" data-life-view="${v}" aria-pressed="${lifeView===v}">${v==='tracker'?'Tracker':'Stats'}</button>`).join('')}</div>
-      ${!tracking?`<div class="life-periods" aria-label="Summary period">${['month','quarter','year'].map(p=>`<button data-life-period="${p}" aria-pressed="${period===p}">${p==='month'?'Month':p==='quarter'?'Quarter':'Year'}</button>`).join('')}</div>`:''}
+    const existingTabs=section.querySelector('.tabs');
+    const existingPeriods=section.querySelector('.period-selector');
+    section.innerHTML=`
+      <div class="tabs" aria-label="Interactions views">${['tracker','stats'].map(v=>`<button class="life-view-tab ${lifeView===v?'active':''}" data-life-view="${v}" aria-pressed="${lifeView===v}">${v==='tracker'?'Tracker':'Stats'}</button>`).join('')}</div>
+      ${!tracking?`<div class="period-selector" aria-label="Summary period">${['month','quarter','year'].map(p=>`<button class="period-btn ${period===p?'active':''}" data-life-period="${p}" aria-pressed="${period===p}">${p==='month'?'Month':p==='quarter'?'Quarter':'Year'}</button>`).join('')}</div>`:''}
       <div class="week-selector"><button id="life-prev" aria-label="Previous period">←</button><div class="week-display-range" style="flex:1;text-align:center">${title}</div><button id="life-next" aria-label="Next period">→</button></div>
       ${[['people','Friends & family',4,'A conversation, a meal, or time together.'],['experience','New experiences',2,'Something you haven’t tried before.']].map(([type,label,goal,description])=>`<div class="card"><h2 class="life-heading">${label}</h2><p class="life-muted">${description}</p>
       <div class="life-counter">${tracking?`<button class="life-count-button" data-count="${type}" data-delta="-1" aria-label="Decrease ${label}" ${entries.filter(e=>e.type===type&&e.month===key(month)).length===0?'disabled':''}>−</button>`:''}<div class="life-goal">${total(type)} <small>/ ${goal*count} ${count===1?'this month':period==='quarter'?'this quarter':'this year'}</small></div>${tracking?`<button class="life-count-button life-plus" data-count="${type}" data-delta="1" aria-label="Increase ${label}">+</button>`:''}</div>
       <div class="progress-bar-container"><div class="progress-bar" style="width:${Math.min(100,total(type)/(goal*count)*100)}%"></div></div><p class="life-muted">${Math.max(0,goal*count-total(type))===0?'Goal reached ✦':`${Math.max(0,goal*count-total(type))} more to reach your goal`} · ${goal} each month</p>
       ${tracking&&total(type)>0?`<details class="life-details" data-details="${type}"><summary>Optional details${selected.some(e=>e.type===type&&(e.title||e.notes))?' · '+selected.filter(e=>e.type===type&&(e.title||e.notes)).length+' noted':''}</summary><p class="life-muted">Add context to any count, whenever you like.</p>${detailsEditor(type, selected.filter(e=>e.type===type))}</details>`:''}</div>`).join('')}
       ${count>1?`<div class="card"><h2 class="section-title">Month by month</h2>${months.map((m,i)=>`<div class="life-summary"><button class="life-month-link" data-open-month="${start+i}">${monthName(start+i)}</button><span>${entries.filter(e=>e.month===m&&e.type==='people').length}/4 people · ${entries.filter(e=>e.month===m&&e.type==='experience').length}/2 experiences</span></div>`).join('')}</div>`:''}
-      <p class="life-status" id="life-status" role="status">${esc(syncMessage)}</p>
+      ${!ready?`<p class="life-muted" role="status">${esc(syncMessage)}</p>`:''}
       ${!ready?'<button class="life-button" id="life-retry">Retry connection</button>':''}`;
+    // Keep navigation nodes mounted so animation and keyboard focus do not reset.
+    if(existingTabs) section.querySelector('.tabs').replaceWith(existingTabs);
+    const periods=section.querySelector('.period-selector');
+    if(existingPeriods && periods) periods.replaceWith(existingPeriods);
+    section.querySelectorAll('[data-life-view]').forEach(b=>{b.classList.toggle('active',b.dataset.lifeView===lifeView);b.setAttribute('aria-pressed',String(b.dataset.lifeView===lifeView));});
+    section.querySelectorAll('[data-life-period]').forEach(b=>{b.classList.toggle('active',b.dataset.lifePeriod===period);b.setAttribute('aria-pressed',String(b.dataset.lifePeriod===period));});
     const retry=document.getElementById('life-retry');if(retry) retry.onclick=load;
     if(!ready) section.querySelectorAll('[data-count]').forEach(b=>b.disabled=true);
     section.querySelectorAll('[data-life-view]').forEach(b=>b.onclick=()=>{lifeView=b.dataset.lifeView;render();});
@@ -81,17 +96,15 @@
     section.querySelectorAll('[data-count]').forEach(button=>button.onclick=async()=>{
       const type=button.dataset.count, delta=Number(button.dataset.delta);
       if(delta===1) {
-        if(await save([...entries,{id:crypto.randomUUID(),type,month:key(month),title:'',notes:''}])) {render();status('Saved to cloud. Details are optional.');}
+        if(await save([...entries,{id:crypto.randomUUID(),type,month:key(month),title:'',notes:''}])) {render();status('Saved to cloud');}
       } else {
         const matching=entries.filter(e=>e.type===type&&e.month===key(month));
         // Remove an unannotated count first to preserve recorded memories.
         const removed=matching.filter(e=>!e.title&&!e.notes).at(-1)||matching.at(-1);
         if(!removed) return;
-        const index=entries.indexOf(removed);
         if(await save(entries.filter(e=>e.id!==removed.id))) {
-          render(); const out=document.getElementById('life-status'); out.textContent='Count removed. ';
-          const undo=document.createElement('button'); undo.className='life-button';undo.textContent='Undo';
-          undo.onclick=async()=>{ const next=[...entries];next.splice(index,0,removed);if(await save(next))render(); };out.append(undo);
+          render();
+          window.ritualToast('Saved to cloud');
         }
       }
     });
@@ -114,7 +127,7 @@
           Array.from(picker.options).forEach((option,i)=>{option.textContent=`${type==='people'?'Interaction':'Experience'} ${i+1}${matching[i].title?' · '+matching[i].title:''}`;});
           const noted=matching.filter(entry=>entry.title||entry.notes).length;
           form.closest('details').querySelector('summary').textContent='Optional details'+(noted?` · ${noted} noted`:'');
-          status('Details saved to cloud. Count unchanged.');
+          status('Details saved');
         }
       };
     });
