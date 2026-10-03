@@ -1,0 +1,70 @@
+.container { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+[hidden] { display:none !important; }
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:20; display:flex; justify-content:center; gap:6px; padding:12px 14px calc(12px + env(safe-area-inset-bottom)); background:#1c1a17f5; border-top:1px solid var(--border-gold); backdrop-filter:blur(18px); }
+.bottom-nav button { max-width:290px; flex:1; padding:14px 8px; border:0; border-radius:12px; background:transparent; color:var(--drift); font:500 13px Jost,sans-serif; }
+.bottom-nav button[aria-pressed=true] { background:var(--gold-dim); color:var(--gold-lt); }
+.life-intro { color:var(--drift); font-size:14px; margin-bottom:20px; line-height:1.6; }
+.life-periods { display:flex; gap:6px; margin-bottom:16px; }
+.life-periods button,.life-button { border:1px solid var(--border-gold); color:var(--gold-lt); background:transparent; border-radius:10px; padding:12px; font:inherit; cursor:pointer; }
+.life-periods button { flex:1; }
+.life-periods button[aria-pressed=true] { background:var(--gold-dim); }
+.life-heading { font:400 22px 'Playfair Display',serif; margin-bottom:8px; }
+.life-goal { font:400 32px 'Playfair Display',serif; margin:16px 0 10px; }
+.life-goal small { color:var(--drift); font:400 14px Jost,sans-serif; }
+.life-muted { color:var(--drift); font-size:13px; line-height:1.6; }
+.life-form { display:grid; gap:14px; margin-top:18px; }
+.life-form label { display:grid; gap:6px; font-size:14px; color:var(--drift); }
+.life-form input,.life-form select,.life-form textarea { width:100%; min-width:0; box-sizing:border-box; padding:12px; border:1px solid var(--border-gold); border-radius:10px; background:var(--bg-deep); color:var(--linen); font:16px Jost,sans-serif; color-scheme:dark; }
+.life-entry { display:flex; gap:12px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+.life-entry-content { flex:1; min-width:0; overflow-wrap:anywhere; }
+.life-entry strong { font-weight:500; }
+.life-entry p { white-space:pre-wrap; }
+.life-entry button { padding:8px; font-size:12px; }
+.life-status { color:var(--sage); font-size:13px; min-height:24px; margin-top:12px; }
+.life-summary { display:flex; justify-content:space-between; padding:10px 0; gap:10px; color:var(--drift); font-size:13px; }
+@media(max-width:480px) { .container { padding-bottom:calc(100px + env(safe-area-inset-bottom)); } }
+.life-counter { display:flex; align-items:center; justify-content:space-between; gap:14px; margin:20px 0; }
+.life-counter .life-goal { margin:0; text-align:center; flex:1; }
+.life-counter .life-goal small { display:block; margin-top:6px; }
+.life-count-button { flex-shrink:0; width:44px; height:44px; border-radius:12px; border:1px solid var(--border-gold); background:var(--bg-card); color:var(--drift); font:24px Jost,sans-serif; cursor:pointer; }
+.life-count-button:disabled { opacity:.3; cursor:default; }
+.life-plus { color:var(--gold-lt); background:var(--gold-dim); }
+.life-details { margin-top:18px; border-top:1px solid var(--border); padding-top:12px; }
+.life-details summary { color:var(--drift); font-size:13px; cursor:pointer; padding:8px 0; }
+.life-note-form { padding:14px 0; border-bottom:1px solid var(--border); }
+.life-note-form .life-button { justify-self:start; font-size:13px; }
+.life-month-link { color:var(--gold-lt); border:0; background:none; font:inherit; padding:4px 0; cursor:pointer; text-decoration:underline; text-underline-offset:4px; }
+/* Mobile usability: retain the existing palette and component shapes. */
+html { scroll-padding-bottom:calc(120px + env(safe-area-inset-bottom)); }
+button, summary { touch-action:manipulation; }
+button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid var(--gold-lt); outline-offset:3px; }
+.week-selector button, .counter-btn, .calendar-nav-btn { min-width:44px; min-height:44px; flex-shrink:0; }
+.tab, .period-btn, .life-periods button, .life-button, .life-month-link, .bottom-nav button, .life-details summary { min-height:44px; }
+.life-details summary { padding:12px 0; }
+.life-form, .life-form label, .life-form select { min-width:0; }
+.life-form select { text-overflow:ellipsis; }
+.life-form input, .life-form textarea, .life-form select { scroll-margin-block:90px; }
+.life-summary { align-items:center; flex-wrap:wrap; }
+.bottom-nav { padding-left:max(14px, env(safe-area-inset-left)); padding-right:max(14px, env(safe-area-inset-right)); }
+@media (max-width:480px) {
+  .container { padding-left:max(14px, env(safe-area-inset-left)); padding-right:max(14px, env(safe-area-inset-right)); padding-bottom:calc(140px + env(safe-area-inset-bottom)); }
+  .activity-label { gap:10px; flex-wrap:wrap; }
+  .life-note-form .life-button { width:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+}
+/* Comfortable text entry without changing the visual language. */
+.life-note-form { gap:16px; }
+.life-note-form label { gap:8px; }
+.life-note-form input, .life-note-form select { min-height:48px; }
+.life-note-form input, .life-note-form select, .life-note-form textarea { font-size:16px; line-height:1.5; }
+.life-note-form textarea { min-height:104px; resize:vertical; }
+.life-note-form input::placeholder, .life-note-form textarea::placeholder { color:var(--drift); opacity:1; }
+@media(max-width:480px) {
+  .life-note-form .life-button { min-height:48px; justify-self:stretch; }
+}
+.life-adjust-month { display:grid; gap:8px; margin-bottom:18px; color:var(--drift); font-size:14px; }
+.life-adjust-month select { width:100%; min-height:48px; padding:12px; border:1px solid var(--border-gold); border-radius:10px; background:var(--bg-deep); color:var(--linen); font:16px Jost,sans-serif; color-scheme:dark; }
+.life-view-tab { flex:1; min-height:44px; padding:10px 16px; border:0; background:transparent; color:var(--drift); font:500 .8125rem Jost,sans-serif; letter-spacing:.06em; text-transform:uppercase; border-radius:9px; cursor:pointer; }
+.life-view-tab.active { background:linear-gradient(135deg,rgba(191,149,90,.24),rgba(191,149,90,.1)); color:var(--gold-lt); box-shadow:0 2px 12px rgba(191,149,90,.14); }
